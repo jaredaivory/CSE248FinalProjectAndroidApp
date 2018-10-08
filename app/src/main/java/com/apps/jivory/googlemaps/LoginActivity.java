@@ -70,20 +70,24 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         //check google services..
         isServicesOk();
 
+        //testing
+        emailEditText = (EditText) findViewById(R.id.email_edit_text) ;
+        emailEditText.setText("exampleemail@provider.net");
+        passwordEditText = (EditText) findViewById(R.id.password_edit_text);
+        passwordEditText.setText("123456");
+
         //stylizing
         //google sign in button styling
         SignInButton signInButton = findViewById(R.id.google_sign_in_button);
         signInButton.setSize(SignInButton.SIZE_ICON_ONLY);
-
     }
 
     public void formLogin(){
-        Toast.makeText(this, "Logging in..", Toast.LENGTH_SHORT).show();
-        //Intent openMap = new Intent(this, MapsActivity.class);
-        //startActivity(openMap);
-        //overridePendingTransition(R.anim.slide_in_right,R.anim.slide_out_left);
+        loginUser(emailEditText.getText().toString(), passwordEditText.getText().toString());
 
-        registerUser(emailEditText.getText().toString(), passwordEditText.getText().toString());
+        Intent openMap = new Intent(this, MapsActivity.class);
+        startActivity(openMap);
+        overridePendingTransition(R.anim.slide_in_right,R.anim.slide_out_left);
     }
 
     public void registerUser(String email, String password){
@@ -104,13 +108,12 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     }
 
     public void loginUser(String email, String password){
-        mAuth.signInWithEmailAndPassword(email,password )
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+        mAuth.signInWithEmailAndPassword(email,password ).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         // Sign in success, update UI with the signed-in user's information
                         if (task.isSuccessful()) {
-                            Log.d(TAG, "createUserWithEmail:success");
+                            Log.d(TAG, "loginUserWithEmail:success");
                             FirebaseUser user = mAuth.getCurrentUser();
                             Toast.makeText(LoginActivity.this, "Success!!", Toast.LENGTH_SHORT).show();
                             // ...
@@ -242,8 +245,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     public void onClick(View v) {
         switch(v.getId()){
             case R.id.loginBtn:
-                //formLogin();
-                Snackbar.make(findViewById(R.id.login_layout), "Hello World", Snackbar.LENGTH_SHORT).show();
+                formLogin();
                 break;
             case R.id.google_sign_in_button:
                 googleSignIn();
