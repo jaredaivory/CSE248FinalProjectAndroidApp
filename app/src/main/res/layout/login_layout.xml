@@ -95,8 +95,16 @@
             android:textColor="@android:color/white"
             android:textSize="20sp"
             android:background="@drawable/button_transparent_border"
-            android:onClick="login"
             android:textStyle="bold" />
+
+        <com.google.android.gms.common.SignInButton
+            android:id="@+id/google_sign_in_button"
+            android:layout_width="match_parent"
+            android:layout_gravity="center"
+            android:layout_margin="3dp"
+            android:onClick="onClick"
+            android:layout_height="wrap_content"
+            />
     </LinearLayout>
 
     <TextView
@@ -111,5 +119,7 @@
         android:text="@string/newUser"
         android:textColor="@color/white"
         android:textSize="15sp" />
+
+
 
 </RelativeLayout>
