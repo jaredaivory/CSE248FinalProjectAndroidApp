@@ -15,6 +15,8 @@ import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -31,10 +33,14 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
+import java.util.Iterator;
+
+public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, View.OnClickListener {
 
     private FusedLocationProviderClient mFusedLocationClient;
     private GoogleMap mMap;
+
+    private int style = 0;
 
     private static final String TAG = "MapsActivity";
     private static final String FINE_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
@@ -53,6 +59,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
+        //Button changeStyle = (Button) findViewById(R.id.change_style_button);
+        //changeStyle.setOnClickListener(this);
     }
 
     @Override
@@ -126,6 +135,26 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     mLocationPermissionsGranted = true;
                 }
             }
+        }
+    }
+
+    public void changeStyle(){
+        int[] styles = {R.raw.style_json_retro,R.raw.style_json,R.raw.style_lost_in_desert,R.raw.style_flat_colors};
+
+        if (style == styles.length){
+            style = 0;
+        }else{
+            style++;
+        }
+        mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, styles[style]));
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch(v.getId()){
+            case R.id.change_style_button:
+                changeStyle();
+                break;
         }
     }
 }
