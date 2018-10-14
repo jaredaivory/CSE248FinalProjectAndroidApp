@@ -1,9 +1,10 @@
-<ScrollView
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto">
+    <data>
+    </data>
+    <ScrollView
     android:layout_height="fill_parent"
     android:layout_width="fill_parent"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:fillViewport="true"
     >
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -106,7 +107,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="@string/show_pwd"
+                    android:text="@string/show_password"
                     android:textColor="@color/white"
                     android:textSize="14sp"
                     />
@@ -124,7 +125,7 @@
             </LinearLayout>
 
             <Button
-                android:id="@+id/loginBtn"
+                android:id="@+id/login_register_Btn"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:text="@string/login"
@@ -177,3 +178,4 @@
 
     </RelativeLayout>
 </ScrollView>
+</layout>

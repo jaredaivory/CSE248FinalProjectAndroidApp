@@ -21,9 +21,13 @@
         <activity android:name=".MainActivity">
 
         </activity>
+        <activity android:name=".oldLoginActivity">
+
+        </activity>
+
         <activity android:name=".LoginActivity"
             android:windowSoftInputMode="stateHidden"
-            >
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>
                 <action android:name="android.intent.action.MAIN" />
@@ -48,10 +52,6 @@
         <activity
             android:name=".MapsActivity"
             android:label="@string/title_activity_maps" />
-        <activity
-            android:name=".MenuActivity"
-            android:label="@string/title_activity_menu"
-            android:theme="@style/Theme.AppCompat.NoActionBar"></activity>
     </application>
 
 </manifest>
