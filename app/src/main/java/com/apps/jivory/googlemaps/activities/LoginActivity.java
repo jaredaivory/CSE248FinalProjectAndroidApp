@@ -1,9 +1,8 @@
-package com.apps.jivory.googlemaps;
+package com.apps.jivory.googlemaps.activities;
 
-import android.arch.lifecycle.ViewModelProviders;
-import android.graphics.drawable.AnimationDrawable;
+import androidx.lifecycle.ViewModelProviders;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 import android.text.method.PasswordTransformationMethod;
 import android.view.View;
 import android.widget.Button;
@@ -12,13 +11,13 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import com.apps.jivory.googlemaps.viewmodels.LoginViewModel;
+import com.apps.jivory.googlemaps.R;
 import com.google.android.gms.common.SignInButton;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
     private LoginViewModel loginViewModel;
-
 
     private com.google.android.gms.common.SignInButton googleButton;
     private EditText email_edit_text, password_edit_text, confirm_email_edit_text, confirm_password_edit_text;
@@ -32,17 +31,23 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         setContentView(R.layout.login_layout);
         loginViewModel = ViewModelProviders.of(this).get(LoginViewModel.class);
         initializeViews();
+
+        email_edit_text.setText("test@email.com");
+        password_edit_text.setText("password");
     }
 
     public void register(){
-        loginViewModel.registerUser(email_edit_text.getText().toString(),
+        loginViewModel.registerUser(
+                email_edit_text.getText().toString(),
                 confirm_email_edit_text.getText().toString(),
                 password_edit_text.getText().toString(),
                 confirm_password_edit_text.getText().toString());
     }
 
     public void login(){
-        loginViewModel.loginUser(email_edit_text.getText().toString(),password_edit_text.getText().toString());
+        loginViewModel.loginUser(
+                email_edit_text.getText().toString(),
+                password_edit_text.getText().toString());
     }
 
 
@@ -64,14 +69,15 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         //background animation
         RelativeLayout relativeLayout = (RelativeLayout) findViewById(R.id.login_layout_background);
-        AnimationDrawable animationDrawable = (AnimationDrawable) relativeLayout.getBackground();
-        animationDrawable.setEnterFadeDuration(2000);
-        animationDrawable.setExitFadeDuration(4000);
-        animationDrawable.start();
+        //AnimationDrawable animationDrawable = (AnimationDrawable) relativeLayout.getBackground();
+        //animationDrawable.setEnterFadeDuration(2000);
+        //animationDrawable.setExitFadeDuration(4000);
+        //animationDrawable.start();
 
         //stylizing
         //google sign in button styling
         googleButton.setSize(SignInButton.SIZE_ICON_ONLY);
+        googleButton.setEnabled(false);
 
         // onClick listener
         setOnClickListeners();

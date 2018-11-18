@@ -3,11 +3,11 @@ package models;
 import java.util.UUID;
 
 public class User {
-    private final String USER_ID = getUserID();
+    private final String USER_ID = createUserID();
     private String emailaddress;
     private String password;
 
-    public static String getUserID() {
+    private static String createUserID() {
         return UUID.randomUUID().toString();
     }
 
@@ -16,12 +16,8 @@ public class User {
         this.password = pass;
     }
 
-    public String getEmailaddress() {
+    public String getEmailAddress() {
         return emailaddress;
-    }
-
-    public String getPassword() {
-        return password;
     }
 
     public void setEmailaddress(String emailaddress) {
@@ -33,7 +29,7 @@ public class User {
     }
 
 
-    public String getUSER_ID() {
+    public String getUSERID() {
         return USER_ID;
     }
 }

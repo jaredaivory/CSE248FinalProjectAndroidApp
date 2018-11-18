@@ -1,27 +1,27 @@
-package com.apps.jivory.googlemaps;
+package com.apps.jivory.googlemaps.viewmodels;
 
 import android.app.Application;
-import android.app.Dialog;
-import android.arch.lifecycle.AndroidViewModel;
+
+import androidx.lifecycle.AndroidViewModel;
 import android.content.Intent;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.apps.jivory.googlemaps.MapsActivity;
+import com.apps.jivory.googlemaps.R;
+import com.apps.jivory.googlemaps.activities.MainActivity;
+import com.apps.jivory.googlemaps.arch.Repository;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
-import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.GoogleAuthProvider;
 
 
 public class LoginViewModel extends AndroidViewModel {
@@ -31,6 +31,8 @@ public class LoginViewModel extends AndroidViewModel {
 
     private FirebaseAuth mAuth;
     private FirebaseUser mUser;
+
+    private Repository repo;
 
     public LoginViewModel(@NonNull Application application) {
         super(application);
@@ -43,6 +45,9 @@ public class LoginViewModel extends AndroidViewModel {
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestIdToken(application.getString(R.string.default_web_client_id)).requestEmail().build();
         mGoogle = GoogleSignIn.getClient(application, gso);
 
+        // Grab Instance of Repository
+        repo = Repository.getInstance();
+
         //check google services
         isServicesOk();
     }
@@ -50,13 +55,14 @@ public class LoginViewModel extends AndroidViewModel {
     public void loginUser(String email, String password){
         if (isValid(email, "Email") && isValid(password, "Password")){
             try {
-                mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                repo.loginEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         // Sign in success, update UI with the signed-in user's information
                         if (task.isSuccessful()) {
-                            FirebaseUser user = mAuth.getCurrentUser();
+                            repo.setFirebaseUser(mAuth.getCurrentUser());
                             Toast.makeText(getApplication(), "Success!!", Toast.LENGTH_SHORT).show();
+                            getApplication().startActivity(new Intent(getApplication(), MainActivity.class));
 
                         } else {
                             Toast.makeText(getApplication(), "Unsuccessful", Toast.LENGTH_SHORT).show();
@@ -64,7 +70,6 @@ public class LoginViewModel extends AndroidViewModel {
                     }
                 });
             } catch (IllegalArgumentException e){
-
             }
         }
 
@@ -72,27 +77,24 @@ public class LoginViewModel extends AndroidViewModel {
 
     public void registerUser(String email, String confirm_email, String password, String confirm_password){
         if(email.equals(confirm_email) && password.equals(confirm_password)){
-            mAuth.createUserWithEmailAndPassword(email,password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+            repo.registerEmailAndPassword(email,password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                 @Override
                 public void onComplete(@NonNull Task<AuthResult> task) {
                     if (task.isSuccessful()) {
                         Log.d(TAG, "createUserWithEmail:success");
-                        //authUser = mAuth.getCurrentUser();
+                        repo.setFirebaseUser(mAuth.getCurrentUser());
                         Toast.makeText(getApplication(), "Success!!", Toast.LENGTH_SHORT).show();
                     } else {
-                        Toast.makeText(getApplication(), "Unsuccessful..", Toast.LENGTH_SHORT).show();
+                        toastError("Registration Failed.");
                     }
                 }
             });
         } else{
-            Toast.makeText(getApplication(), "Email/Passwords do not match" , Toast.LENGTH_SHORT).show();
+            toastError("Email/Passwords do not match");
         }
-
-
     }
 
-
-    public boolean isServicesOk(){
+    private boolean isServicesOk(){
         Log.d(TAG, "isServicesOk: checking google services version");
 
         int available = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(getApplication());
@@ -113,13 +115,12 @@ public class LoginViewModel extends AndroidViewModel {
         return false;
     }
 
+    private void toastError(String error){
+        Toast.makeText(getApplication(), "Error: " + error, Toast.LENGTH_SHORT).show();
+    }
 
-
-
-
-    public boolean isValid(String text, String name){
+    private boolean isValid(String text, String name){
         if(text.trim().length() > 0){
-
             return true;
         }
         Toast.makeText(getApplication(), "Invalid " + name, Toast.LENGTH_SHORT).show();
