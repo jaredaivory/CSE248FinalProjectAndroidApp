@@ -19,7 +19,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.apps.jivory.googlemaps.viewmodels.LoginViewModel;
-import com.apps.jivory.googlemaps.MapsActivity;
 import com.apps.jivory.googlemaps.R;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;

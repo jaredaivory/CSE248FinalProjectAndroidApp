@@ -1,4 +1,4 @@
-package com.apps.jivory.googlemaps;
+package com.apps.jivory.googlemaps.activities;
 
 
 import android.Manifest;
@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
+import com.apps.jivory.googlemaps.R;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -25,12 +26,10 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
 
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, View.OnClickListener {
+public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private FusedLocationProviderClient mFusedLocationClient;
     private GoogleMap mMap;
-
-    private int style = 0;
 
     private static final String TAG = "MapsActivity";
     private static final String FINE_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
@@ -122,12 +121,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     mLocationPermissionsGranted = true;
                 }
             }
-        }
-    }
-
-    @Override
-    public void onClick(View v) {
-        switch(v.getId()){
         }
     }
 }
