@@ -1,9 +1,13 @@
 package models;
 
+import com.google.firebase.database.IgnoreExtraProperties;
+
 import java.util.UUID;
 
+@IgnoreExtraProperties
 public class User {
     private final String USER_ID = createUserID();
+    private String fullname;
     private String emailaddress;
     private String password;
 
@@ -11,12 +15,16 @@ public class User {
         return UUID.randomUUID().toString();
     }
 
-    public User(String email, String pass){
-        this.emailaddress = email;
-        this.password = pass;
+    public User(){
+
     }
 
-    public String getEmailAddress() {
+    public User(String fullname, String email){
+        this.emailaddress = email;
+        this.fullname = fullname;
+    }
+
+    public String getEmailaddress() {
         return emailaddress;
     }
 
@@ -27,7 +35,6 @@ public class User {
     public void setPassword(String password) {
         this.password = password;
     }
-
 
     public String getUSERID() {
         return USER_ID;

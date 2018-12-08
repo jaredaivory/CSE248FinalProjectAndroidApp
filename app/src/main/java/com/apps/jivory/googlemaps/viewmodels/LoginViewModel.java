@@ -8,9 +8,8 @@ import androidx.annotation.NonNull;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.apps.jivory.googlemaps.MapsActivity;
-import com.apps.jivory.googlemaps.R;
 import com.apps.jivory.googlemaps.activities.MainActivity;
+import com.apps.jivory.googlemaps.R;
 import com.apps.jivory.googlemaps.arch.Repository;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;

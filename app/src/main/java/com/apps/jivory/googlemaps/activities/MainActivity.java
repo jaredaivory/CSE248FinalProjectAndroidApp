@@ -24,6 +24,8 @@ import android.util.Log;
 import android.view.View;
 
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
@@ -34,12 +36,13 @@ import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.ViewModelProviders;
+import models.Post;
 
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-public class NavigationActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, OnMapReadyCallback {
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, OnMapReadyCallback {
     private static final String TAG = "MainActivity";
     private static final String FINE_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
     private static final String COARSE_LOCATION = Manifest.permission.ACCESS_COARSE_LOCATION;
@@ -50,6 +53,7 @@ public class NavigationActivity extends AppCompatActivity implements NavigationV
     private FusedLocationProviderClient mFusedLocationClient;
     private GoogleMap mMap;
     private MainViewModel mainViewModel;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,6 +70,14 @@ public class NavigationActivity extends AppCompatActivity implements NavigationV
         mapFragment.getMapAsync(this);
     }
 
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        mainViewModel
+    }
+
     private void initializeViews(){
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -75,6 +87,9 @@ public class NavigationActivity extends AppCompatActivity implements NavigationV
             @Override
             public void onClick(View view) {
                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG).setAction("Action", null).show();
+                mainViewModel.insertNewPost(new Post("Example Description",
+                        new LatLng(0,0)));
+                mainViewModel.writeNewUser("Jared Ivory", "ivory.jared@gmail.com");
             }
         });
 
@@ -188,7 +203,7 @@ public class NavigationActivity extends AppCompatActivity implements NavigationV
                             moveCamera(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()), DEFAULT_ZOOM);
                         } else{
                             Log.d(TAG, "onComplete: current location is null ");
-                            Toast.makeText(NavigationActivity.this, "unable to get current location", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(MainActivity.this, "unable to get current location", Toast.LENGTH_SHORT).show();
                         }
                     }
                 });

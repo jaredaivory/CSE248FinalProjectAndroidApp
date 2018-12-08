@@ -20,4 +20,10 @@
     <string name="password">Password</string>
     <string name="default_id_token">803258087733-mn7kiffkbob8kk51tchumfcphgm9o3uh.apps.googleusercontent.com</string>
     <string name="title_activity_example">Map</string>
+    <string name="title_activity_navigation">NavigationActivity</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
 </resources>

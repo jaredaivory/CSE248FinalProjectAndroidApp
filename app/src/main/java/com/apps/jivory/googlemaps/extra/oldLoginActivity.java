@@ -1,4 +1,4 @@
-package com.apps.jivory.googlemaps.activities;
+package com.apps.jivory.googlemaps.extra;
 
 import android.app.Dialog;
 import androidx.lifecycle.ViewModelProviders;
@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
+
 import com.google.android.material.snackbar.Snackbar;
 import androidx.appcompat.app.AppCompatActivity;
 import android.text.method.PasswordTransformationMethod;
