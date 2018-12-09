@@ -16,6 +16,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -24,7 +25,7 @@ import com.google.firebase.auth.FirebaseUser;
 
 
 public class LoginViewModel extends AndroidViewModel {
-    private String TAG;
+    private static final String TAG = "LOGINVIEWMODEL";
     private static final int ERROR_DIALOG_REQUEST = 801;
     private GoogleSignInClient mGoogle;
 
@@ -35,7 +36,6 @@ public class LoginViewModel extends AndroidViewModel {
 
     public LoginViewModel(@NonNull Application application) {
         super(application);
-        TAG = application.getClass().toString();
 
         //initializing Firebase authorization
         mAuth = FirebaseAuth.getInstance();
@@ -126,8 +126,17 @@ public class LoginViewModel extends AndroidViewModel {
         return false;
     }
 
-
-
+    public boolean checkAuth(){
+        if(mAuth != null){
+            repo.setFirebaseUser(mAuth.getCurrentUser());
+            Toast.makeText(getApplication(), "Success!!", Toast.LENGTH_SHORT).show();
+            Log.d(TAG, "checkAuth: isAuthenticated");
+            getApplication().startActivity(new Intent(getApplication(), MainActivity.class));
+            return true;
+        }
+        Log.d(TAG, "checkAuth: notAuthenticated");
+        return false;
+    }
 
 }
 

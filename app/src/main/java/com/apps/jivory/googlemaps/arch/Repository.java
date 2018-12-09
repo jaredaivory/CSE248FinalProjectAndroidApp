@@ -1,25 +1,20 @@
 package com.apps.jivory.googlemaps.arch;
 
-import android.provider.ContactsContract;
+import android.util.Log;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
-import java.util.List;
-
-import androidx.lifecycle.LiveData;
-import models.Post;
-import models.User;
+import com.apps.jivory.googlemaps.models.Post;
+import com.apps.jivory.googlemaps.models.User;
 
 public class Repository {
+    public static final String TAG = "REPOSITORY";
     static Repository INSTANCE = null;
 
     private FirebaseAuth mAuth;
@@ -50,13 +45,24 @@ public class Repository {
     public void writeNewUser(String name, String email) {
         User user = new User(name, email);
 
-        DatabaseReference usersRef = mDatabase.child("users");
-        usersRef.child(user.getUSERID()).setValue(user);
+        DatabaseReference usersRef = mDatabase.child("users").child(mUser.getUid());
+        usersRef.setValue(user);
     }
 
     public void insertNewPost(Post post){
+        post.setCreator(mUser.getUid());
+        DatabaseReference postsRef = mDatabase.child("posts").child(post.getPOST_ID());
+        postsRef.setValue(post);
+    }
+
+    public DatabaseReference getUserReference(){
+        DatabaseReference usersRef = mDatabase.child("users").child(mUser.getUid());
+        return usersRef;
+    }
+
+    public DatabaseReference getPostsReference(){
         DatabaseReference postsRef = mDatabase.child("posts");
-        postsRef.child(post.getPOST_ID()).setValue(post);
+        return postsRef;
     }
 
     public static Repository getInstance(){

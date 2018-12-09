@@ -1,4 +1,4 @@
-package models;
+package com.apps.jivory.googlemaps.models;
 
 import com.google.firebase.database.IgnoreExtraProperties;
 
@@ -6,24 +6,17 @@ import java.util.UUID;
 
 @IgnoreExtraProperties
 public class User {
-    private final String USER_ID = createUserID();
+    private String USER_ID;
     private String fullname;
     private String emailaddress;
-    private String password;
-
-    private static String createUserID() {
-        return UUID.randomUUID().toString();
-    }
 
     public User(){
-
     }
 
     public User(String fullname, String email){
         this.emailaddress = email;
         this.fullname = fullname;
     }
-
     public String getEmailaddress() {
         return emailaddress;
     }
@@ -32,11 +25,30 @@ public class User {
         this.emailaddress = emailaddress;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
 
     public String getUSERID() {
         return USER_ID;
+    }
+
+    public String getFullname() {
+        return fullname;
+    }
+
+    public void setFullname(String fullname) {
+        this.fullname = fullname;
+    }
+
+    public void setUSER_ID(String user_id){
+        this.USER_ID = user_id;
+    }
+
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "USER_ID='" + USER_ID + '\'' +
+                ", fullname='" + fullname + '\'' +
+                ", emailaddress='" + emailaddress + '\'' +
+                '}';
     }
 }

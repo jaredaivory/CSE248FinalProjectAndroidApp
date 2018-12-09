@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 import android.text.method.PasswordTransformationMethod;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -34,6 +35,12 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         email_edit_text.setText("test@email.com");
         password_edit_text.setText("password");
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        loginViewModel.checkAuth();
     }
 
     public void register(){
