@@ -42,8 +42,8 @@ public class Repository {
         this.mUser = user;
     }
 
-    public void writeNewUser(String name, String email) {
-        User user = new User(name, email);
+    public void writeNewUser(String firstname, String lastname, String email) {
+        User user = new User(firstname, lastname, email);
 
         DatabaseReference usersRef = mDatabase.child("users").child(mUser.getUid());
         usersRef.setValue(user);

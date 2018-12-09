@@ -46,8 +46,8 @@ public class MainViewModel extends AndroidViewModel {
         firebasePostsData = new FirebaseLiveDataHelper(repo.getPostsReference());
     }
 
-    public void writeNewUser(String fullname, String emailaddress){
-        repo.writeNewUser(fullname, emailaddress);
+    public void writeNewUser(String firstname, String lastname, String emailaddress){
+        repo.writeNewUser(firstname, lastname, emailaddress);
     }
 
     public void insertNewPost(Post post){

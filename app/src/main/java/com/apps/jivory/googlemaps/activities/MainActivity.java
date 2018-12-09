@@ -115,6 +115,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             public void onClick(View view) {
                 Snackbar.make(view, "Posted Event", Snackbar.LENGTH_LONG).setAction("Action", null).show();
                 Post p = new Post("Example Title", new LatLng(40.7642071,-72.9499798 ));
+                p.setDescription("Example description");
                 mainViewModel.insertNewPost(p);
             }
         });
@@ -224,12 +225,22 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     LatLng location = p.getLatLng();
                     m.position(new com.google.android.gms.maps.model.LatLng(location.getLatitude(), location.getLongitude()));
                     m.title(p.getTitle());
+                    m.snippet(p.getDescription());
 
                     mMap.addMarker(m);
                 }
             }
         });
 
+        /**
+         * For every indivisual marker we need to add a click listener so we may view it.
+         */
+        mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(Marker marker) {
+                return false;
+            }
+        });
 
     }
 
