@@ -2,12 +2,15 @@ package com.apps.jivory.googlemaps.models;
 
 import com.google.firebase.database.IgnoreExtraProperties;
 
+import java.util.Set;
+
 @IgnoreExtraProperties
 public class User {
     private String USER_ID;
     private String firstname;
     private String lastname;
     private String emailaddress;
+    private Set<User> friends;
 
     public User(){
     }
@@ -44,6 +47,14 @@ public class User {
 
     public void setLastname(String lastname) {
         this.lastname = lastname;
+    }
+
+    public Set<User> getFriends() {
+        return friends;
+    }
+
+    public void setFriends(Set<User> friends) {
+        this.friends = friends;
     }
 
     @Override

@@ -1,8 +1,69 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/holo_blue_bright"
-    >
+    android:background="@android:color/black">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:orientation="horizontal"
+        android:background="@color/colorPrimaryDark"
+        >
+
+        <ImageView
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:src="@mipmap/ic_launcher"
+            app:srcCompat="@mipmap/ic_launcher_round"
+            />
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            >
+
+            <TextView
+                android:id="@+id/fragment_user_firstname"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="FIRST"
+                android:textSize="20dp"
+                android:fontFamily="sans-serif-condensed"
+                android:padding="5dp"
+                />
+            <TextView
+                android:id="@+id/fragment_user_lastname"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="LAST"
+                android:layout_toRightOf="@+id/fragment_user_firstname"
+                android:textSize="20dp"
+                android:padding="5dp"
+                android:fontFamily="sans-serif-condensed"
+                />
+            <TextView
+                android:id="@+id/fragment_user_email"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/fragment_user_firstname"
+                android:text="email address"
+                android:padding="5dp"
+
+                />
+
+        </RelativeLayout>
+
+
+
+    </LinearLayout>
+
+
+
+
 
 </LinearLayout>

@@ -7,6 +7,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+
         <fragment xmlns:android="http://schemas.android.com/apk/res/android"
             xmlns:map="http://schemas.android.com/apk/res-auto"
             xmlns:tools="http://schemas.android.com/tools"
@@ -16,5 +17,40 @@
             android:layout_height="match_parent"
             tools:context=".activities.MainActivity" />
     </FrameLayout>
+
+    <RelativeLayout
+        android:id="@+id/rLayout_Search"
+        android:layout_width="320dp"
+        android:layout_height="50dp"
+        android:layout_margin="10dp"
+        android:padding="5dp"
+        android:background="#AAFFFFFF"
+        >
+
+        <ImageView
+            android:id="@+id/icon_search"
+            android:layout_centerVertical="true"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:src="@drawable/ic_search"
+            />
+        <EditText
+            android:id="@+id/map_search"
+            android:layout_centerVertical="true"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignStart="@+id/icon_search"
+            android:layout_marginStart="20dp"
+            android:textColor="#000"
+            android:textSize="15sp"
+            android:textColorHint="#000"
+            android:hint="hello"
+            android:imeOptions="actionSearch"
+            android:singleLine="true"
+            />
+
+    </RelativeLayout>
+
+
 
 </RelativeLayout>

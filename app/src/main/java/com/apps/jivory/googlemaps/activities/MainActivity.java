@@ -71,10 +71,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_navigation);
-
         initializeViews();
         getLocationPerms();
-
         mainViewModel = ViewModelProviders.of(this).get(MainViewModel.class);
     }
 
@@ -128,9 +126,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new MapFragment()).commit();
     }
 
-    /**
-     * Overrided methods for the navigation menu
-     */
+    /**Overrided methods for the navigation menu */
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -163,9 +159,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return super.onOptionsItemSelected(item);
     }
 
-    @SuppressWarnings("StatementWithEmptyBody")
     @Override
-
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -180,13 +174,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 break;
             default:
         }
-
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+    /** */
 
-    /********************************/
 
+    /** Location permissions **/
     private void getLocationPerms(){
         String[] permissions = {Manifest.permission.ACCESS_FINE_LOCATION ,Manifest.permission.ACCESS_COARSE_LOCATION};
         if(ContextCompat.checkSelfPermission(this.getApplicationContext(), FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
@@ -196,7 +190,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             ActivityCompat.requestPermissions(this, permissions, LOCATION_PERMISSION_REQUEST_CODE );
         }
     }
-
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         mLocationPermissionsGranted = false;
@@ -212,4 +205,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         }
     }
+    /**  **/
+
 }
