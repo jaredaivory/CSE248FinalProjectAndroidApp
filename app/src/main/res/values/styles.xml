@@ -8,6 +8,7 @@
         <item name="colorAccent">@color/colorAccent</item>
         <item name="colorControlNormal">#ffffff</item>
         <item name="colorControlActivated">#757575</item>
+        <item name="android:statusBarColor"> @android:color/transparent</item>
 
     </style>
 

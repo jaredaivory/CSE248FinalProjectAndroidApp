@@ -1,0 +1,49 @@
+@Override
+    public void onMapReady(GoogleMap googleMap) {
+        Toast.makeText(this, "Map is ready..", Toast.LENGTH_SHORT).show();
+        mMap = googleMap;
+        googleMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, R.raw.style_json_retro));
+
+        if (mLocationPermissionsGranted) {
+            getDeviceLocation();
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                return;
+            }
+            mMap.setMyLocationEnabled(true);
+            mMap.getUiSettings().setMyLocationButtonEnabled(false);
+        }
+
+        LiveData<DataSnapshot> postsData = mainViewModel.getPostData();
+        postsData.observe(this, new Observer<DataSnapshot>() {
+            @Override
+            public void onChanged(DataSnapshot dataSnapshot) {
+                Iterable<DataSnapshot> posts = dataSnapshot.getChildren();
+                postList = new ArrayList<>();
+                for(DataSnapshot data: posts){
+                    Post p = data.getValue(Post.class);
+                    postList.add(p);
+                    Log.d(TAG, "onChanged: "+data.toString());
+                }
+                for(Post p: postList){
+                    MarkerOptions m = new MarkerOptions();
+                    LatLng location = p.getLatLng();
+                    m.position(new com.google.android.gms.maps.model.LatLng(location.getLatitude(), location.getLongitude()));
+                    m.title(p.getTitle());
+                    m.snippet(p.getDescription());
+
+                    mMap.addMarker(m);
+                }
+            }
+        });
+
+        /**
+         * For every indivisual marker we need to add a click listener so we may view it.
+         */
+        mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(Marker marker) {
+                return false;
+            }
+        });
+
+    }

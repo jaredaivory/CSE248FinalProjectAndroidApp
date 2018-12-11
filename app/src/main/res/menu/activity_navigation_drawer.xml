@@ -9,7 +9,14 @@
             android:id="@+id/nav_posts"
             android:icon="@drawable/ic_edit_location"
             android:title="My Posts" />
+
+        <item
+            android:id="@+id/nav_map"
+            android:icon="@drawable/ic_map"
+            android:title="Map"
+            />
     </group>
+
 
     <item android:title="User Settings">
         <menu>

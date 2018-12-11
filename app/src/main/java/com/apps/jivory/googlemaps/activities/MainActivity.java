@@ -6,6 +6,8 @@ import android.location.Location;
 import android.os.Bundle;
 
 import com.apps.jivory.googlemaps.R;
+import com.apps.jivory.googlemaps.fragments.MapFragment;
+import com.apps.jivory.googlemaps.fragments.UserFragment;
 import com.apps.jivory.googlemaps.models.LatLng;
 import com.apps.jivory.googlemaps.models.User;
 import com.apps.jivory.googlemaps.viewmodels.MainViewModel;
@@ -36,6 +38,8 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
@@ -52,16 +56,14 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, OnMapReadyCallback {
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private static final String TAG = "MAINACTIVITY";
     private static final String FINE_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
     private static final String COARSE_LOCATION = Manifest.permission.ACCESS_COARSE_LOCATION;
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 2001;
-    private static final float DEFAULT_ZOOM = 15f;
 
-    private Boolean mLocationPermissionsGranted = false;
+    public static Boolean mLocationPermissionsGranted = false;
     private FusedLocationProviderClient mFusedLocationClient;
-    private GoogleMap mMap;
     private MainViewModel mainViewModel;
     private List<Post> postList;
 
@@ -74,10 +76,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         getLocationPerms();
 
         mainViewModel = ViewModelProviders.of(this).get(MainViewModel.class);
-
-        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
     }
 
 
@@ -121,16 +119,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         });
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new MapFragment()).commit();
     }
-
 
     /**
      * Overrided methods for the navigation menu
@@ -169,80 +165,27 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
+
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
-        int id = item.getItemId();
-
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
-
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        switch(item.getItemId()){
+            case(R.id.nav_account):
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                        new UserFragment()).commit();
+                break;
+            case(R.id.nav_map):
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                        new MapFragment()).commit();
+                break;
+            default:
         }
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
 
     /********************************/
-
-    @Override
-    public void onMapReady(GoogleMap googleMap) {
-        Toast.makeText(this, "Map is ready..", Toast.LENGTH_SHORT).show();
-        mMap = googleMap;
-        googleMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, R.raw.style_json_retro));
-
-        if (mLocationPermissionsGranted) {
-            getDeviceLocation();
-            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                return;
-            }
-            mMap.setMyLocationEnabled(true);
-            mMap.getUiSettings().setMyLocationButtonEnabled(false);
-        }
-
-        LiveData<DataSnapshot> postsData = mainViewModel.getPostData();
-        postsData.observe(this, new Observer<DataSnapshot>() {
-            @Override
-            public void onChanged(DataSnapshot dataSnapshot) {
-                Iterable<DataSnapshot> posts = dataSnapshot.getChildren();
-                postList = new ArrayList<>();
-                for(DataSnapshot data: posts){
-                    Post p = data.getValue(Post.class);
-                    postList.add(p);
-                    Log.d(TAG, "onChanged: "+data.toString());
-                }
-                for(Post p: postList){
-                    MarkerOptions m = new MarkerOptions();
-                    LatLng location = p.getLatLng();
-                    m.position(new com.google.android.gms.maps.model.LatLng(location.getLatitude(), location.getLongitude()));
-                    m.title(p.getTitle());
-                    m.snippet(p.getDescription());
-
-                    mMap.addMarker(m);
-                }
-            }
-        });
-
-        /**
-         * For every indivisual marker we need to add a click listener so we may view it.
-         */
-        mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
-            @Override
-            public boolean onMarkerClick(Marker marker) {
-                return false;
-            }
-        });
-
-    }
 
     private void getLocationPerms(){
         String[] permissions = {Manifest.permission.ACCESS_FINE_LOCATION ,Manifest.permission.ACCESS_COARSE_LOCATION};
@@ -252,39 +195,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         } else{
             ActivityCompat.requestPermissions(this, permissions, LOCATION_PERMISSION_REQUEST_CODE );
         }
-    }
-
-    private Location getDeviceLocation(){
-        Log.d(TAG, "getDeviceLocation: getting the devices current location");
-        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
-        Location currentLocation = null;
-        try{
-            if(mLocationPermissionsGranted){
-                Task location = mFusedLocationClient.getLastLocation();
-                location.addOnCompleteListener(new OnCompleteListener() {
-                    @Override
-                    public void onComplete(@NonNull Task task) {
-                        if(task.isSuccessful()){
-                            Log.d(TAG, "onComplete: found location!");
-                            Location currentLocation = (Location) task.getResult();
-                            moveCamera(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()), DEFAULT_ZOOM);
-                        } else{
-                            Log.d(TAG, "onComplete: current location is null ");
-                            Toast.makeText(MainActivity.this, "unable to get current location", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
-            }
-        }catch (SecurityException e){
-            Log.e(TAG, "getDeviceLocation: " + e.getMessage());
-        }
-        return currentLocation;
-    }
-
-    private void moveCamera(LatLng latLng, float zoom){
-        Log.d(TAG, "moveCamera: moving the camera to: lat: " + latLng.getLatitude() + ", lng: " + latLng.getLongitude());
-        com.google.android.gms.maps.model.LatLng googleLatLng = new com.google.android.gms.maps.model.LatLng(latLng.getLatitude(), latLng.getLongitude());
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(googleLatLng, zoom));
     }
 
     @Override

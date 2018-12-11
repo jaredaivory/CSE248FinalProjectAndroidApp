@@ -50,10 +50,6 @@
             android:name=".activities.MainActivity"
             android:label="@string/title_activity_navigation"
             android:theme="@style/Theme.AppCompat.NoActionBar" />
-        <activity
-            android:name=".activities.UserActivity"
-            android:label="@string/title_activity_user"
-            android:theme="@style/Theme.AppCompat.NoActionBar"></activity>
     </application>
 
 </manifest>
