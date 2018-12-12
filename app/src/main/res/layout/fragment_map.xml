@@ -20,9 +20,9 @@
 
     <RelativeLayout
         android:id="@+id/rLayout_Search"
-        android:layout_width="320dp"
+        android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:layout_margin="10dp"
+        android:layout_marginRight="50dp"
         android:padding="5dp"
         android:background="#AAFFFFFF"
         >
@@ -34,7 +34,7 @@
             android:layout_height="20dp"
             android:src="@drawable/ic_search"
             />
-        <EditText
+        <AutoCompleteTextView
             android:id="@+id/map_search"
             android:layout_centerVertical="true"
             android:layout_width="match_parent"
@@ -43,8 +43,8 @@
             android:layout_marginStart="20dp"
             android:textColor="#000"
             android:textSize="15sp"
-            android:textColorHint="#000"
-            android:hint="hello"
+            android:textColorHint="#424242"
+            android:hint="Search"
             android:imeOptions="actionSearch"
             android:singleLine="true"
             />

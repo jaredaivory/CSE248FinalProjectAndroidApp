@@ -2,6 +2,7 @@ package com.apps.jivory.googlemaps.fragments;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
@@ -12,21 +13,35 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
-import android.widget.EditText;
-import android.widget.TextView;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.AutoCompleteTextView;
 import android.widget.Toast;
 
 import com.apps.jivory.googlemaps.R;
 import com.apps.jivory.googlemaps.activities.MainActivity;
-import com.apps.jivory.googlemaps.models.LatLng;
+import com.apps.jivory.googlemaps.models.LatitudeLongitude;
+import com.apps.jivory.googlemaps.models.PlacesAutoCompleteAdapter;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApi;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.PendingResult;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.places.AutocompletePrediction;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.PlaceBuffer;
+import com.google.android.gms.location.places.Places;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MapStyleOptions;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
@@ -39,14 +54,19 @@ import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 
-public class MapFragment extends Fragment implements OnMapReadyCallback {
+public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleApiClient.OnConnectionFailedListener {
     public static final String TAG = "MapFragment";
     private static final float DEFAULT_ZOOM = 15f;
+    private static final LatLngBounds latLngBounds = new LatLngBounds(new com.google.android.gms.maps.model.LatLng(-85,-180), new com.google.android.gms.maps.model.LatLng(85,180));
 
-    private EditText editTextSearch;
+
+    /** Places API **/
+    private PlacesAutoCompleteAdapter placesAutoCompleteAdapter;
+    private AutoCompleteTextView editTextSearch;
 
     private GoogleMap mMap;
     private FusedLocationProviderClient mFusedLocationClient;
+    private Marker currentMarker;
 
     @Nullable
     @Override
@@ -65,23 +85,47 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
     private void initializeViews(){
         Log.d(TAG, "init: initializing");
-        editTextSearch.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (    actionId == EditorInfo.IME_ACTION_SEARCH ||
-                        actionId == EditorInfo.IME_ACTION_DONE ||
-                        event.getAction() == KeyEvent.ACTION_DOWN ||
-                        event.getAction() == KeyEvent.KEYCODE_ENTER) {
-                    geoLocate();
-                    editTextSearch.setText("");
-                }
-                return false;
+
+
+
+        placesAutoCompleteAdapter = new PlacesAutoCompleteAdapter(getActivity(), MainActivity.googleApiClient, latLngBounds, null);
+        editTextSearch.setAdapter(placesAutoCompleteAdapter);
+        
+        editTextSearch.setOnEditorActionListener((v, actionId, event) -> {
+            if (    actionId == EditorInfo.IME_ACTION_SEARCH ||
+                    actionId == EditorInfo.IME_ACTION_DONE ||
+                    event.getAction() == KeyEvent.ACTION_DOWN ||
+                    event.getAction() == KeyEvent.KEYCODE_ENTER) {
+                editTextSearch.setText("");
             }
+            return false;
+        });
+
+        editTextSearch.setOnItemClickListener((parent, view, position, id) -> {
+            getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+
+            final AutocompletePrediction item = placesAutoCompleteAdapter.getItem(position);
+            final String placeID = item.getPlaceId();
+
+            PendingResult<PlaceBuffer> result = Places.GeoDataApi.getPlaceById(MainActivity.googleApiClient, placeID);
+            result.setResultCallback(places -> {
+                if(places.getStatus().isSuccess()){
+                    Place place = places.get(0);
+                    Log.d(TAG, "place: " + place.getName());
+                    geoLocate();
+                    closeKeyboard();
+                } else {
+                    Log.d(TAG, "autocomplete-:places");
+                }
+                places.release();
+            });
+
         });
     }
 
     private void geoLocate(){
         Log.d(TAG, "geoLocate: geolocationg");
+
         String searchString = editTextSearch.getText().toString();
 
         Geocoder geocoder = new Geocoder(getActivity());
@@ -93,7 +137,18 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         }
         if(list.size() > 0){
             Address address = list.get(0);
+            LatitudeLongitude latitudeLongitude = new LatitudeLongitude(address.getLatitude(), address.getLongitude());
+            moveCamera(latitudeLongitude, DEFAULT_ZOOM);
             Log.d(TAG, "geoLocate: location " + address.toString());
+        }
+        editTextSearch.setText("");
+    }
+
+    private void closeKeyboard(){
+        View view = getView();
+        if(view != null){
+            InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
     }
 
@@ -135,7 +190,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                         if(task.isSuccessful()){
                             Log.d(TAG, "onComplete: found location!");
                             Location currentLocation = (Location) task.getResult();
-                            moveCamera(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()), DEFAULT_ZOOM);
+                            moveCamera(new LatitudeLongitude(currentLocation.getLatitude(), currentLocation.getLongitude()), DEFAULT_ZOOM);
                         } else{
                             Log.d(TAG, "onComplete: current location is null ");
                             Toast.makeText(getActivity(), "unable to get current location", Toast.LENGTH_SHORT).show();
@@ -149,10 +204,30 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         return currentLocation;
     }
 
-    private void moveCamera(LatLng latLng, float zoom){
-        Log.d(TAG, "moveCamera: moving the camera to: lat: " + latLng.getLatitude() + ", lng: " + latLng.getLongitude());
-        com.google.android.gms.maps.model.LatLng googleLatLng = new com.google.android.gms.maps.model.LatLng(latLng.getLatitude(), latLng.getLongitude());
+    private void moveCamera(LatitudeLongitude latitudeLongitude, float zoom){
+        Log.d(TAG, "moveCamera: moving the camera to: lat: " + latitudeLongitude.getLatitude() + ", lng: " + latitudeLongitude.getLongitude());
+        LatLng googleLatLng = new LatLng(latitudeLongitude.getLatitude(), latitudeLongitude.getLongitude());
+
+        if(currentMarker != null) {
+            currentMarker.remove();
+        }
+
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(googleLatLng, zoom));
+        currentMarker = mMap.addMarker(new MarkerOptions().position(googleLatLng));
     }
+
+    private void moveCamera(LatitudeLongitude latitudeLongitude, float zoom, Place place){
+        Log.d(TAG, "moveCamera: moving the camera to: lat: " + latitudeLongitude.getLatitude() + ", lng: " + latitudeLongitude.getLongitude());
+        LatLng googleLatLng = new LatLng(latitudeLongitude.getLatitude(), latitudeLongitude.getLongitude());
+
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(googleLatLng, zoom));
+        currentMarker = mMap.addMarker(new MarkerOptions().position(googleLatLng));
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
+    }
+
 
 }

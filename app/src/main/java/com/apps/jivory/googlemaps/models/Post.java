@@ -8,7 +8,7 @@ public class Post {
     private final String POST_ID = createPostID();
     private String title;
     private String description;
-    private LatLng latLng;
+    private LatitudeLongitude latitudeLongitude;
     private String creator;
 
     private static String createPostID() {
@@ -18,9 +18,9 @@ public class Post {
     public Post(){
     }
 
-    public Post(String title, LatLng latLng){
+    public Post(String title, LatitudeLongitude latitudeLongitude){
         this.title = title;
-        this.latLng = latLng;
+        this.latitudeLongitude = latitudeLongitude;
 
     }
 
@@ -36,12 +36,12 @@ public class Post {
         this.description = description;
     }
 
-    public LatLng getLatLng() {
-        return latLng;
+    public LatitudeLongitude getLatitudeLongitude() {
+        return latitudeLongitude;
     }
 
-    public void setLatLng(LatLng latLng) {
-        this.latLng = latLng;
+    public void setLatitudeLongitude(LatitudeLongitude latitudeLongitude) {
+        this.latitudeLongitude = latitudeLongitude;
     }
 
     public String getCreator() {
@@ -65,7 +65,7 @@ public class Post {
         return "Post{" +
                 "POST_ID='" + POST_ID + '\'' +
                 ", description='" + description + '\'' +
-                ", latLng=" + latLng +
+                ", latitudeLongitude=" + latitudeLongitude +
                 ", creator='" + creator + '\'' +
                 '}';
     }

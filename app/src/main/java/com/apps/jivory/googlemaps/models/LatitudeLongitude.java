@@ -3,14 +3,14 @@ package com.apps.jivory.googlemaps.models;
 import com.google.firebase.database.IgnoreExtraProperties;
 
 @IgnoreExtraProperties
-public class LatLng{
+public class LatitudeLongitude {
     private Double latitude;
     private Double longitude;
 
-    public LatLng(){
+    public LatitudeLongitude(){
     }
 
-    public LatLng(double latitude, double longitude){
+    public LatitudeLongitude(double latitude, double longitude){
         this.latitude = latitude;
         this.longitude = longitude;
     }
@@ -33,7 +33,7 @@ public class LatLng{
 
     @Override
     public String toString() {
-        return "LatLng{" +
+        return "LatitudeLongitude{" +
                 "latitude=" + latitude +
                 ", longitude=" + longitude +
                 '}';

@@ -1,19 +1,9 @@
 package com.apps.jivory.googlemaps.viewmodels;
 
 import android.app.Application;
-import android.location.Location;
-import android.util.Log;
-import android.widget.Toast;
 
-import com.apps.jivory.googlemaps.activities.MainActivity;
 import com.apps.jivory.googlemaps.arch.FirebaseLiveDataHelper;
 import com.apps.jivory.googlemaps.arch.Repository;
-import com.apps.jivory.googlemaps.models.LatLng;
-import com.apps.jivory.googlemaps.models.User;
-import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -23,8 +13,6 @@ import androidx.lifecycle.LiveData;
 
 import com.apps.jivory.googlemaps.models.Post;
 import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.ValueEventListener;
 
 public class MainViewModel extends AndroidViewModel {
     public static final String TAG  = "MainViewModel";
