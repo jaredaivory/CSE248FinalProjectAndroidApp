@@ -16,5 +16,9 @@
 
     <style name="PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
+    <style name="PostDialog" parent="AlertDialog.AppCompat">
+        <item name="android:textColor">@color/black</item>
+    </style>
+
 
 </resources>

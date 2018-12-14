@@ -53,6 +53,14 @@ public class User {
         return friends;
     }
 
+    public String getUSER_ID() {
+        return USER_ID;
+    }
+
+    public void setUSER_ID(String USER_ID) {
+        this.USER_ID = USER_ID;
+    }
+
     public void setFriends(Set<User> friends) {
         this.friends = friends;
     }

@@ -42,6 +42,10 @@ public class MainViewModel extends AndroidViewModel {
         repo.insertNewPost(post);
     }
 
+    public void updateNewPost(Post post){
+        repo.updatePost(post);
+    }
+
 
     public LiveData<DataSnapshot> getUserData(){
         return firebaseUserData;
@@ -50,4 +54,8 @@ public class MainViewModel extends AndroidViewModel {
         return firebasePostsData;
     }
 
+
+    public void deletePost(String postID){
+        repo.deletePost(postID);
+    }
 }

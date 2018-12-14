@@ -5,6 +5,7 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 
 import com.apps.jivory.googlemaps.R;
+import com.apps.jivory.googlemaps.fragments.EditPostFragment;
 import com.apps.jivory.googlemaps.fragments.MapFragment;
 import com.apps.jivory.googlemaps.fragments.PostsFragment;
 import com.apps.jivory.googlemaps.fragments.UserFragment;
@@ -30,6 +31,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
@@ -39,10 +41,11 @@ import com.google.firebase.database.DataSnapshot;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, GoogleApiClient.OnConnectionFailedListener {
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, GoogleApiClient.OnConnectionFailedListener, EditPostFragment.EditPostFragmentListener {
     private static final String TAG = "MAINACTIVITY";
     private static final String FINE_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
     private static final String COARSE_LOCATION = Manifest.permission.ACCESS_COARSE_LOCATION;
@@ -50,8 +53,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     public static Boolean mLocationPermissionsGranted = false;
     private FusedLocationProviderClient mFusedLocationClient;
-    private MainViewModel mainViewModel;
+    public static MainViewModel mainViewModel;
     private List<Post> postList;
+
+    private MapFragment mapFragment;
 
     public static GoogleApiClient googleApiClient;
 
@@ -103,10 +108,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Posted Event", Snackbar.LENGTH_LONG).setAction("Action", null).show();
-                Post p = new Post("Example Title", new LatitudeLongitude(40.7642071,-72.9499798 ));
-                p.setDescription("Example description");
-                mainViewModel.insertNewPost(p);
+                EditPostFragment dialogFragment = new EditPostFragment();
+                dialogFragment.show(getSupportFragmentManager(),"CreatePost");
             }
         });
 
@@ -117,6 +120,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new MapFragment()).commit();
     }
 
@@ -164,7 +168,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 break;
             case(R.id.nav_map):
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                        new MapFragment()).commit();
+                        new MapFragment() ).commit();
                 break;
             case(R.id.nav_posts):
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
@@ -205,6 +209,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
+    }
+
+    /** CreatePostFragment Result**/
+    @Override
+    public void onPostSaved(Post p) {
+        if(p.getCreator()!=null) {
+            mainViewModel.updateNewPost(p);
+            Toast.makeText(this, "Updated Post", Toast.LENGTH_SHORT).show();
+        } else{
+            mainViewModel.insertNewPost(p);
+            Toast.makeText(this, "Posted Event" + p.getTitle(), Toast.LENGTH_SHORT).show();
+        }
 
     }
     /**  **/

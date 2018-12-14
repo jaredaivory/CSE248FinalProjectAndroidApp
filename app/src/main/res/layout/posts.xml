@@ -6,69 +6,116 @@
     android:layout_height="wrap_content"
     android:layout_margin="5dp"
     >
-
     <RelativeLayout
         android:id="@+id/background"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="15dp"
         >
-        <LinearLayout
-            android:id="@+id/lLayout_SATScores25th"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_below="@+id/textView_Title"
-            >
-            <TextView
-                android:id="@+id/Description"
+        <RelativeLayout
+            android:id="@+id/postdata"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:id="@+id/lLayout_Description"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Description:"
-                android:layout_marginRight="5dp"
-                android:textAppearance="@style/TextAppearance.AppCompat.Widget.DropDownItem"
+                android:layout_alignParentEnd="true"
+                android:layout_below="@+id/textView_Post_Title"
+                >
+                <TextView
+                    android:id="@+id/Description"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Description:"
+                    android:layout_marginEnd="5dp"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Widget.DropDownItem"
+                    />
+                <TextView
+                    android:id="@+id/textView_Post_Description"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="description"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Widget.DropDownItem"
+                    />
+            </LinearLayout>
+
+
+
+
+            <TextView
+                android:id="@+id/textView_Post_Title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Title"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large"
                 />
-            <TextView
-                android:id="@+id/post_Description"
+            <LinearLayout
+                android:id="@+id/lLayout_Creator"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="description"
-                android:textAppearance="@style/TextAppearance.AppCompat.Widget.DropDownItem"
-                />
-        </LinearLayout>
+                android:layout_below="@+id/textView_Post_Title"
+                >
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Creator:"
+                    />
+                <TextView
+                    android:id="@+id/textView_Post_Creator"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Creator"
+                    />
 
+            </LinearLayout>
 
+            <LinearLayout
+                android:id="@+id/lLayout_Location"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/lLayout_Creator"
+                >
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Location: "
+                    />
+                <TextView
+                    android:id="@+id/textView_Post_Location"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Location"
+                    />
 
+            </LinearLayout>
 
-        <TextView
-            android:id="@+id/textView_Title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Title"
-            android:textAppearance="@style/TextAppearance.AppCompat.Large"
-            />
+        </RelativeLayout>
+
         <LinearLayout
-            android:id="@+id/lLayout_School_ID"
+            android:id="@+id/lLayout_Post_ID"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/textView_Title"
+            android:layout_below="@+id/postdata"
             >
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textColor="#22FFFFFF"
                 android:text="Post ID: "
                 />
 
             <TextView
-                android:id="@+id/textView_ID"
+                android:id="@+id/textView_Post_ID"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textColor="#22FFFFFF"
                 android:text="ID" />
         </LinearLayout>
 
-
-
-
     </RelativeLayout>
+
+
 </androidx.cardview.widget.CardView>

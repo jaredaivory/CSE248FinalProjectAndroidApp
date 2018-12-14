@@ -13,6 +13,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.apps.jivory.googlemaps.models.Post;
 import com.apps.jivory.googlemaps.models.User;
 
+import java.util.HashSet;
+
 public class Repository {
     public static final String TAG = "REPOSITORY";
     static Repository INSTANCE = null;
@@ -42,6 +44,8 @@ public class Repository {
         this.mUser = user;
     }
 
+
+
     public void writeNewUser(String firstname, String lastname, String email) {
         User user = new User(firstname, lastname, email);
 
@@ -51,9 +55,26 @@ public class Repository {
 
     public void insertNewPost(Post post){
         post.setCreator(mUser.getUid());
+        Log.d(TAG, "insertNewPost: " +post.addParticipant(mUser.getUid()));
+        post.setPOST_ID(Post.createPostID());
+        post.addParticipant(mUser.getUid());
+
+        DatabaseReference postsRef = mDatabase.child("posts").child(post.getPOST_ID());
+        postsRef.setValue(post);
+
+        Log.d(TAG, "insertNewPost: "+ post.toString());
+    }
+    public void updatePost(Post post){
         DatabaseReference postsRef = mDatabase.child("posts").child(post.getPOST_ID());
         postsRef.setValue(post);
     }
+
+    public void deletePost(String postID){
+        DatabaseReference postsRef = mDatabase.child("posts").child(postID);
+        Log.d(TAG, "deletePost: " +postsRef.toString());
+        postsRef.removeValue();
+    }
+
 
     public DatabaseReference getUserReference(){
         DatabaseReference usersRef = mDatabase.child("users").child(mUser.getUid());
