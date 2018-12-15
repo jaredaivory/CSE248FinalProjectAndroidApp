@@ -2,9 +2,11 @@ package com.apps.jivory.googlemaps.activities;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
+import android.database.Observable;
 import android.os.Bundle;
 
 import com.apps.jivory.googlemaps.R;
+import com.apps.jivory.googlemaps.UserObserver;
 import com.apps.jivory.googlemaps.fragments.EditPostFragment;
 import com.apps.jivory.googlemaps.fragments.MapFragment;
 import com.apps.jivory.googlemaps.fragments.PostsFragment;
@@ -19,6 +21,7 @@ import com.google.android.gms.location.places.Places;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
+import android.util.Log;
 import android.view.View;
 
 import com.google.android.material.navigation.NavigationView;
@@ -45,8 +48,9 @@ import android.widget.Toast;
 
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, GoogleApiClient.OnConnectionFailedListener, EditPostFragment.EditPostFragmentListener {
-    private static final String TAG = "MAINACTIVITY";
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener,
+        GoogleApiClient.OnConnectionFailedListener, EditPostFragment.EditPostFragmentListener, UserFragment.UserFragmentListener, UserObserver.UserListener {
+    private static final String TAG = "MainActivity";
     private static final String FINE_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
     private static final String COARSE_LOCATION = Manifest.permission.ACCESS_COARSE_LOCATION;
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 2001;
@@ -59,6 +63,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private MapFragment mapFragment;
 
     public static GoogleApiClient googleApiClient;
+
+    private User currentUser;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,18 +92,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         // Observes the userdata provided from the database.
         LiveData<DataSnapshot> userData = mainViewModel.getUserData();
-        userData.observe(this, new Observer<DataSnapshot>() {
-            @Override
-            public void onChanged(DataSnapshot dataSnapshot) {
-                User currentuser = dataSnapshot.getValue(User.class);
-                String fullname = currentuser.getFullname();
-                TextView textViewName = findViewById(R.id.header_Username);
-                textViewName.setText(fullname);
-                String emailaddress = currentuser.getEmailaddress();
-                TextView textViewEmail = findViewById(R.id.header_EmailAddress);
-                textViewEmail.setText(emailaddress);
-            }
-        });
+        userData.observe(this, new UserObserver(this));
 
     }
 
@@ -164,7 +160,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         switch(item.getItemId()){
             case(R.id.nav_account):
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                        new UserFragment()).commit();
+                        new UserFragment(currentUser)).commit();
                 break;
             case(R.id.nav_map):
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
@@ -179,7 +175,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return true;
     }
     /** */
-
 
     /** Location permissions **/
     private void getLocationPerms(){
@@ -224,6 +219,27 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
 
     }
+
+    /** UserFragment Result**/
+    @Override
+    public void onUserSave(User user) {
+        Log.d(TAG, "onUserSave: " + user.toString());
+        mainViewModel.updateUser(user);
+    }
+
+    /** Listener for user data changes**/
+    @Override
+    public void onUserChanged(User user) {
+        currentUser = user;
+
+        String fullname = currentUser.getFullname();
+        TextView textViewName = findViewById(R.id.header_Username);
+        textViewName.setText(fullname);
+        String emailaddress = currentUser.getEmailaddress();
+        TextView textViewEmail = findViewById(R.id.header_EmailAddress);
+        textViewEmail.setText(emailaddress);
+    }
     /**  **/
+
 
 }

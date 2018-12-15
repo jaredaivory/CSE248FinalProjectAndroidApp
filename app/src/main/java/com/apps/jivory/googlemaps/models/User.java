@@ -2,6 +2,7 @@ package com.apps.jivory.googlemaps.models;
 
 import com.google.firebase.database.IgnoreExtraProperties;
 
+import java.util.Date;
 import java.util.Set;
 
 @IgnoreExtraProperties
@@ -11,6 +12,7 @@ public class User {
     private String lastname;
     private String emailaddress;
     private Set<User> friends;
+    private Date dateofbirth;
 
     public User(){
     }
@@ -65,12 +67,24 @@ public class User {
         this.friends = friends;
     }
 
+    public Date getDateofbirth() {
+        return dateofbirth;
+    }
+
+    public void setDateofbirth(Date dateofbirth) {
+        this.dateofbirth = dateofbirth;
+    }
+
+
     @Override
     public String toString() {
         return "User{" +
                 "USER_ID='" + USER_ID + '\'' +
-                ", fullname='" + firstname + " " + lastname + '\'' +
+                ", firstname='" + firstname + '\'' +
+                ", lastname='" + lastname + '\'' +
                 ", emailaddress='" + emailaddress + '\'' +
+                ", friends=" + friends +
+                ", dateofbirth=" + dateofbirth +
                 '}';
     }
 }

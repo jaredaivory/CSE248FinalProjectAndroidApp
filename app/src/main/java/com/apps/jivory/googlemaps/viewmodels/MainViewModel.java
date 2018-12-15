@@ -4,6 +4,7 @@ import android.app.Application;
 
 import com.apps.jivory.googlemaps.arch.FirebaseLiveDataHelper;
 import com.apps.jivory.googlemaps.arch.Repository;
+import com.apps.jivory.googlemaps.models.User;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -36,6 +37,10 @@ public class MainViewModel extends AndroidViewModel {
 
     public void writeNewUser(String firstname, String lastname, String emailaddress){
         repo.writeNewUser(firstname, lastname, emailaddress);
+    }
+
+    public void updateUser(User user){
+        repo.updateUser(user);
     }
 
     public void insertNewPost(Post post){

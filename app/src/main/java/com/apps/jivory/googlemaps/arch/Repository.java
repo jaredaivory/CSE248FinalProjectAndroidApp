@@ -75,6 +75,11 @@ public class Repository {
         postsRef.removeValue();
     }
 
+    public void updateUser(User user){
+        DatabaseReference usersRef = mDatabase.child("users").child(mUser.getUid());
+        usersRef.setValue(user);
+    }
+
 
     public DatabaseReference getUserReference(){
         DatabaseReference usersRef = mDatabase.child("users").child(mUser.getUid());
