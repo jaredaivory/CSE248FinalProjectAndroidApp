@@ -169,8 +169,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleA
             mMap.setMyLocationEnabled(true);
 
             initializeViews();
-
-            mMap.getUiSettings().setAllGesturesEnabled(true);
         } else {
             Log.d(TAG, "onMapReady: Location Permissions not granted");
         }
@@ -222,12 +220,20 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleA
 
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(googleLatLng, zoom));
         currentMarker = mMap.addMarker(new MarkerOptions().position(googleLatLng));
+
+        mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(Marker marker) {
+                return false;
+            }
+        });
     }
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
 
     }
+
 
 
 }

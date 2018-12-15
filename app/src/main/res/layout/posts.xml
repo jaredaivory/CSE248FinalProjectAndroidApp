@@ -21,8 +21,9 @@
                 android:id="@+id/lLayout_Description"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_below="@+id/textView_Post_Title"
+                android:layout_alignParentEnd="false"
+                android:layout_below="@+id/lLayout_Location"
+                android:orientation="vertical"
                 >
                 <TextView
                     android:id="@+id/Description"
@@ -36,7 +37,7 @@
                     android:id="@+id/textView_Post_Description"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="description"
+                    android:text="@string/lorem"
                     android:textAppearance="@style/TextAppearance.AppCompat.Widget.DropDownItem"
                     />
             </LinearLayout>
@@ -55,7 +56,8 @@
                 android:id="@+id/lLayout_Creator"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/textView_Post_Title"
+                android:layout_alignParentEnd="true"
+                android:layout_below="@+id/lLayout_Description"
                 >
                 <TextView
                     android:layout_width="wrap_content"
@@ -75,7 +77,7 @@
                 android:id="@+id/lLayout_Location"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/lLayout_Creator"
+                android:layout_below="@+id/textView_Post_Title"
                 >
                 <TextView
                     android:layout_width="wrap_content"

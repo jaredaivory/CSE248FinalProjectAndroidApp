@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.apps.jivory.googlemaps.R;
+import com.apps.jivory.googlemaps.models.Post;
 import com.apps.jivory.googlemaps.observers.FirebaseObserver;
 import com.apps.jivory.googlemaps.models.PostAdapter;
 import com.apps.jivory.googlemaps.models.PostHashMap;
@@ -58,6 +59,7 @@ public class PostsFragment extends Fragment implements FirebaseObserver{
         view = inflater.inflate(R.layout.fragment_posts, container, false);
         initializeViews();
 
+        // remove and add interface
         mainViewModel = ViewModelProviders.of(getActivity()).get(MainViewModel.class);
 
         return view;
@@ -99,10 +101,25 @@ public class PostsFragment extends Fragment implements FirebaseObserver{
 
             @Override
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
-                mainViewModel.deletePost(adapter.getPostID(viewHolder.getAdapterPosition()));
-                Toast.makeText(getContext(), "Post deleted", Toast.LENGTH_SHORT).show();
+                deletePost(viewHolder);
             }
         }).attachToRecyclerView(recyclerView);
+    }
+
+    private void deletePost(RecyclerView.ViewHolder viewHolder){
+        String key = adapter.getPostID(viewHolder.getAdapterPosition());
+        if(posts.containsKey(key) ){
+            Post p = posts.get(key);
+            if(p.getCreator().equals(currentUser.getUSER_ID())){
+                mainViewModel.deletePost(key);
+                Toast.makeText(getContext(), "Post deleted", Toast.LENGTH_SHORT).show();
+            } else {
+                // do nothing
+                Toast.makeText(getContext(), "Dismissed Post", Toast.LENGTH_SHORT).show();
+            }
+        }
+
+
     }
 
     @Override

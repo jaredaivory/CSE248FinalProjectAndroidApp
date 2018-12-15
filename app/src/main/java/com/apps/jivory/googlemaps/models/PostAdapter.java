@@ -38,9 +38,15 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostHolder> {
         Log.d(TAG, "onBindViewHolder: " + currentUser.getUSER_ID());
         Log.d(TAG, "onBindViewHolder: " + p.getCreator());
 
-        String creator = "You";
+        String creator;
         if (!p.getCreator().equals(currentUser.getUSER_ID())) {
             creator = users.get(p.getCreator()).getFullname();
+        } else {
+            creator = "You";
+            holder.setOnClickListener(v -> {
+                EditPostFragment dialogFragment = new EditPostFragment(p);
+                dialogFragment.show(((FragmentActivity) holder.itemView.getContext()).getSupportFragmentManager(), "Edit Post");
+            });
         }
         holder.textViewTitle.setText(p.getTitle());
         holder.textViewCreator.setText(creator);
@@ -86,19 +92,21 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostHolder> {
         private TextView textViewID;
         private Post currentPost;
 
+        private View itemView;
+
         private PostHolder(@NonNull View itemView) {
             super(itemView);
+            this.itemView = itemView;
 
             this.textViewTitle = itemView.findViewById(R.id.textView_Post_Title);
             this.textViewDescription = itemView.findViewById(R.id.textView_Post_Description);
             this.textViewCreator = itemView.findViewById(R.id.textView_Post_Creator);
             this.textViewLocation = itemView.findViewById(R.id.textView_Post_Location);
             this.textViewID = itemView.findViewById(R.id.textView_Post_ID);
+        }
 
-            itemView.setOnClickListener(v -> {
-                EditPostFragment dialogFragment = new EditPostFragment(currentPost);
-                dialogFragment.show(((FragmentActivity) itemView.getContext()).getSupportFragmentManager(), "Edit Post");
-            });
+        public void setOnClickListener(View.OnClickListener o){
+            itemView.setOnClickListener(o);
         }
 
         private void setCurrentPost(Post post) {
