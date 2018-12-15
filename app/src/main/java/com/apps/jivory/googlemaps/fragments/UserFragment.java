@@ -13,8 +13,10 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 
 import com.apps.jivory.googlemaps.R;
-import com.apps.jivory.googlemaps.UserObserver;
+import com.apps.jivory.googlemaps.models.CurrentUser;
 import com.apps.jivory.googlemaps.models.User;
+import com.apps.jivory.googlemaps.observers.FirebaseObservable;
+import com.apps.jivory.googlemaps.observers.FirebaseObserver;
 
 import java.text.DateFormat;
 import java.util.Calendar;
@@ -24,12 +26,13 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-public class UserFragment extends Fragment implements DatePickerDialog.OnDateSetListener {
+public class UserFragment extends Fragment implements DatePickerDialog.OnDateSetListener, FirebaseObserver {
     public static final String TAG = "UserFragment";
 
     private UserFragmentListener listener;
     private View view;
 
+    private CurrentUser currentUserHolder;
     private User currentUser;
 
     private EditText editTextDOB, editTextFirstName, editTextLastName, editTextEmailAddress;
@@ -45,18 +48,16 @@ public class UserFragment extends Fragment implements DatePickerDialog.OnDateSet
 
 
     @SuppressLint("ValidFragment")
-    public UserFragment(User user){
-        this.currentUser = user;
+    public UserFragment(CurrentUser currentUserHolder){
+        this.currentUserHolder = currentUserHolder;
+        this.currentUser = currentUserHolder.getUser();
     }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view =  inflater.inflate(R.layout.fragment_user, container, false);
-
         init();
-        refresh();
-
         return view;
     }
 
@@ -66,8 +67,15 @@ public class UserFragment extends Fragment implements DatePickerDialog.OnDateSet
         if(context instanceof UserFragmentListener){
             listener = (UserFragmentListener) context;
         }
+        currentUserHolder.registerObserver(this);
     }
 
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        refresh();
+    }
 
     private void init(){
         editTextDOB = view.findViewById(R.id.editText_DateOfBirth);
@@ -92,6 +100,12 @@ public class UserFragment extends Fragment implements DatePickerDialog.OnDateSet
             listener.onUserSave(updateUser());
         });
 
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        currentUserHolder.removeObserver(this);
     }
 
     private void refresh(){
@@ -122,4 +136,11 @@ public class UserFragment extends Fragment implements DatePickerDialog.OnDateSet
         editTextDOB.setText(date);
     }
 
+
+    @Override
+    public void onChanged() {
+        this.currentUser = currentUserHolder.getUser();
+        Log.d(TAG, " onChanged:" + currentUser.toString());
+        refresh();
+    }
 }

@@ -1,5 +1,6 @@
 package com.apps.jivory.googlemaps.arch;
 
+import android.provider.ContactsContract;
 import android.util.Log;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -46,9 +47,7 @@ public class Repository {
 
 
 
-    public void writeNewUser(String firstname, String lastname, String email) {
-        User user = new User(firstname, lastname, email);
-
+    public void writeNewUser(User user) {
         DatabaseReference usersRef = mDatabase.child("users").child(mUser.getUid());
         usersRef.setValue(user);
     }
@@ -89,6 +88,9 @@ public class Repository {
     public DatabaseReference getPostsReference(){
         DatabaseReference postsRef = mDatabase.child("posts");
         return postsRef;
+    }
+    public DatabaseReference getAllUsersReference(){
+        return mDatabase.child("users");
     }
 
     public static Repository getInstance(){

@@ -23,6 +23,7 @@ public class MainViewModel extends AndroidViewModel {
     private Repository repo;
     private FirebaseLiveDataHelper firebaseUserData;
     private FirebaseLiveDataHelper firebasePostsData;
+    private FirebaseLiveDataHelper firebaseAllUsersData;
 
     public MainViewModel(@NonNull Application application) {
         super(application);
@@ -33,10 +34,11 @@ public class MainViewModel extends AndroidViewModel {
 
         firebaseUserData = new FirebaseLiveDataHelper(repo.getUserReference());
         firebasePostsData = new FirebaseLiveDataHelper(repo.getPostsReference());
+        firebaseAllUsersData = new FirebaseLiveDataHelper(repo.getAllUsersReference());
     }
 
-    public void writeNewUser(String firstname, String lastname, String emailaddress){
-        repo.writeNewUser(firstname, lastname, emailaddress);
+    public void writeNewUser(User user){
+        repo.writeNewUser(user);
     }
 
     public void updateUser(User user){
@@ -58,9 +60,17 @@ public class MainViewModel extends AndroidViewModel {
     public LiveData<DataSnapshot> getPostData(){
         return firebasePostsData;
     }
-
+    public LiveData<DataSnapshot> getAllUsersData() {return  firebaseAllUsersData;}
 
     public void deletePost(String postID){
         repo.deletePost(postID);
+    }
+
+    public String getFirebaseUserID(){
+        return mUser.getUid();
+    }
+
+    public void logout(){
+        mAuth.signOut();
     }
 }

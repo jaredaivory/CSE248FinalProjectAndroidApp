@@ -11,6 +11,7 @@ import android.widget.Toast;
 import com.apps.jivory.googlemaps.activities.MainActivity;
 import com.apps.jivory.googlemaps.R;
 import com.apps.jivory.googlemaps.arch.Repository;
+import com.apps.jivory.googlemaps.models.User;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -30,7 +31,6 @@ public class LoginViewModel extends AndroidViewModel {
     private GoogleSignInClient mGoogle;
 
     private FirebaseAuth mAuth;
-    private FirebaseUser mUser;
 
     private Repository repo;
 
@@ -74,7 +74,7 @@ public class LoginViewModel extends AndroidViewModel {
 
     }
 
-    public void registerUser(String email, String confirm_email, String password, String confirm_password){
+    public void registerUser(String email, String confirm_email, String password, String confirm_password, String firstname, String lastname){
         if(email.equals(confirm_email) && password.equals(confirm_password)){
             repo.registerEmailAndPassword(email,password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                 @Override
@@ -82,6 +82,7 @@ public class LoginViewModel extends AndroidViewModel {
                     if (task.isSuccessful()) {
                         Log.d(TAG, "createUserWithEmail:success");
                         repo.setFirebaseUser(mAuth.getCurrentUser());
+                        repo.writeNewUser(new User(firstname, lastname, email));
                         Toast.makeText(getApplication(), "Success!!", Toast.LENGTH_SHORT).show();
                     } else {
                         toastError("Registration Failed.");
@@ -127,7 +128,7 @@ public class LoginViewModel extends AndroidViewModel {
     }
 
     public boolean checkAuth(){
-        if(mAuth != null){
+        if(mAuth.getCurrentUser() != null){
             repo.setFirebaseUser(mAuth.getCurrentUser());
             Toast.makeText(getApplication(), "Success!!", Toast.LENGTH_SHORT).show();
             Log.d(TAG, "checkAuth: isAuthenticated");

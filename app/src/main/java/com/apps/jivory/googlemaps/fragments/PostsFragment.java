@@ -1,24 +1,25 @@
 package com.apps.jivory.googlemaps.fragments;
 
+import android.annotation.SuppressLint;
+import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.apps.jivory.googlemaps.R;
-import com.apps.jivory.googlemaps.models.Post;
+import com.apps.jivory.googlemaps.observers.FirebaseObserver;
 import com.apps.jivory.googlemaps.models.PostAdapter;
+import com.apps.jivory.googlemaps.models.PostHashMap;
 import com.apps.jivory.googlemaps.models.User;
+import com.apps.jivory.googlemaps.models.UsersHashMap;
 import com.apps.jivory.googlemaps.viewmodels.MainViewModel;
 import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.GenericTypeIndicator;
-
-import java.util.HashMap;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProviders;
@@ -26,14 +27,31 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-public class PostsFragment extends Fragment {
+public class PostsFragment extends Fragment implements FirebaseObserver{
     public static final String TAG = "PostsFragment";
 
     private MainViewModel mainViewModel;
     private RecyclerView recyclerView;
     private PostAdapter adapter;
 
+    private PostHashMap posts;
+    private UsersHashMap users;
+    private User currentUser;
+
+
     private View view;
+
+    public PostsFragment(){
+
+    }
+
+    @SuppressLint("ValidFragment")
+    public PostsFragment(PostHashMap posts, UsersHashMap users, User currentUser){
+        this.posts = posts;
+        this.users = users;
+        this.currentUser = currentUser;
+    }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -46,25 +64,24 @@ public class PostsFragment extends Fragment {
     }
 
     @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        posts.registerObserver(this);
+        users.registerObserver(this);
+    }
+
+    @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        LiveData<DataSnapshot> postsData = mainViewModel.getPostData();
-        postsData.observe(getActivity(), dataSnapshot -> {
-            GenericTypeIndicator<HashMap<String, Post>> t = new GenericTypeIndicator<HashMap<String,Post>>() {};
-            HashMap<String,Post> posts = dataSnapshot.getValue(t);
-            if(posts!=null){
-                adapter.setPosts(posts);
-            }
-        });
+        refresh();
 
-        LiveData<DataSnapshot> userData = mainViewModel.getUserData();
-        userData.observe(getActivity(), dataSnapshot -> {
-            User user = dataSnapshot.getValue(User.class);
-            user.setUSER_ID(dataSnapshot.getKey());
-            adapter.setUser(user);
-        });
+    }
 
+    private void refresh(){
+        adapter.setPosts(posts);
+        adapter.setUser(currentUser);
+        adapter.setUsers(users);
     }
 
     private void initializeViews(){
@@ -86,6 +103,19 @@ public class PostsFragment extends Fragment {
                 Toast.makeText(getContext(), "Post deleted", Toast.LENGTH_SHORT).show();
             }
         }).attachToRecyclerView(recyclerView);
+    }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        posts.removeObserver(this);
+        users.removeObserver(this);
+    }
+
+    @Override
+    public void onChanged() {
+        Log.d(TAG, "onChanged: Posts" + posts.toString());
+        Log.d(TAG, "onChanged: Users" + users.toString());
+        refresh();
     }
 }

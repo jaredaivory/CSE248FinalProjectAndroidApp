@@ -22,7 +22,7 @@ import androidx.fragment.app.DialogFragment;
 
 public class EditPostFragment extends DialogFragment {
     public static final String TAG = "EditPostFragment";
-    private EditPostFragmentListener createPostFragmentListener;
+    private EditPostFragmentListener listener;
 
     private EditText editTextPostTitle, editTextPostDescription;
     private Button btnPostSave;
@@ -62,7 +62,7 @@ public class EditPostFragment extends DialogFragment {
     public void onAttach(Context context) {
         super.onAttach(context);
         if(context instanceof EditPostFragmentListener){
-            createPostFragmentListener = (EditPostFragmentListener) context;
+            listener = (EditPostFragmentListener) context;
         }
     }
 
@@ -89,7 +89,7 @@ public class EditPostFragment extends DialogFragment {
             } else {
                 savePost();
             }
-            createPostFragmentListener.onPostSaved(post);
+            listener.onPostSaved(post);
             dismiss();
         });
 

@@ -1,25 +1,28 @@
 package com.apps.jivory.googlemaps.activities;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.database.Observable;
 import android.os.Bundle;
 
 import com.apps.jivory.googlemaps.R;
-import com.apps.jivory.googlemaps.UserObserver;
+import com.apps.jivory.googlemaps.models.CurrentUser;
+import com.apps.jivory.googlemaps.models.PostHashMap;
+import com.apps.jivory.googlemaps.observers.PostsObserver;
+import com.apps.jivory.googlemaps.observers.CurrentUserObserver;
 import com.apps.jivory.googlemaps.fragments.EditPostFragment;
 import com.apps.jivory.googlemaps.fragments.MapFragment;
 import com.apps.jivory.googlemaps.fragments.PostsFragment;
 import com.apps.jivory.googlemaps.fragments.UserFragment;
-import com.apps.jivory.googlemaps.models.LatitudeLongitude;
 import com.apps.jivory.googlemaps.models.User;
+import com.apps.jivory.googlemaps.models.UsersHashMap;
+import com.apps.jivory.googlemaps.observers.UsersObserver;
 import com.apps.jivory.googlemaps.viewmodels.MainViewModel;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.places.Places;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
 
 import android.util.Log;
 import android.view.View;
@@ -34,9 +37,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import com.apps.jivory.googlemaps.models.Post;
 import com.google.firebase.database.DataSnapshot;
@@ -49,7 +50,7 @@ import android.widget.Toast;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener,
-        GoogleApiClient.OnConnectionFailedListener, EditPostFragment.EditPostFragmentListener, UserFragment.UserFragmentListener, UserObserver.UserListener {
+        GoogleApiClient.OnConnectionFailedListener, EditPostFragment.EditPostFragmentListener, UsersObserver.UsersListener, UserFragment.UserFragmentListener, CurrentUserObserver.UserListener, PostsObserver.PostsListener {
     private static final String TAG = "MainActivity";
     private static final String FINE_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
     private static final String COARSE_LOCATION = Manifest.permission.ACCESS_COARSE_LOCATION;
@@ -64,7 +65,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     public static GoogleApiClient googleApiClient;
 
-    private User currentUser;
+    private CurrentUser currentUser;
+    private PostHashMap posts;
+    private UsersHashMap users;
 
 
     @Override
@@ -90,10 +93,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
          * Start Listening for data changes.
          */
 
-        // Observes the userdata provided from the database.
-        LiveData<DataSnapshot> userData = mainViewModel.getUserData();
-        userData.observe(this, new UserObserver(this));
-
+        createObservers();
     }
 
     private void initializeViews(){
@@ -118,6 +118,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         navigationView.setNavigationItemSelectedListener(this);
 
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new MapFragment()).commit();
+    }
+
+
+    private void createObservers(){
+        // Observes the userdata provided from the database.
+        LiveData<DataSnapshot> userData = mainViewModel.getUserData();
+        userData.observe(this, new CurrentUserObserver(this));
+        // Observes the postsdata provided from the database.
+        LiveData<DataSnapshot> postsData = mainViewModel.getPostData();
+        postsData.observe(this, new PostsObserver(this));
+
+        LiveData<DataSnapshot> allUsersData = mainViewModel.getAllUsersData();
+        allUsersData.observe(this, new UsersObserver(this));
     }
 
     /**Overrided methods for the navigation menu */
@@ -168,7 +181,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 break;
             case(R.id.nav_posts):
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                    new PostsFragment()).commit();
+                    new PostsFragment(posts, users, currentUser.getUser())).commit();
+                break;
+            case(R.id.nav_logout):
+                mainViewModel.logout();
+                Intent intent = new Intent(this, LoginActivity.class);
+                startActivity(intent);
+                finish();
+                break;
             default:
         }
         drawer.closeDrawer(GravityCompat.START);
@@ -229,17 +249,31 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     /** Listener for user data changes**/
     @Override
-    public void onUserChanged(User user) {
-        currentUser = user;
+    public void onCurrentUserChanged(CurrentUser currentUser) {
+        currentUser.getUser().setUSER_ID(mainViewModel.getFirebaseUserID());
+        this.currentUser = currentUser;
+        Log.d(TAG, "onCurrentUserChanged: ***"+ this.currentUser.toString());
 
-        String fullname = currentUser.getFullname();
+        String fullname = currentUser.getUser().getFullname();
         TextView textViewName = findViewById(R.id.header_Username);
         textViewName.setText(fullname);
-        String emailaddress = currentUser.getEmailaddress();
+        String emailaddress = currentUser.getUser().getEmailaddress();
         TextView textViewEmail = findViewById(R.id.header_EmailAddress);
         textViewEmail.setText(emailaddress);
     }
+    /** Listener for posts data changes **/
+    @Override
+    public void onPostsChanged(PostHashMap postHashMap) {
+        this.posts = postHashMap;
+    }
+
+    /** **/
+    @Override
+    public void onUsersChanged(UsersHashMap users) {
+        this.users = users;
+    }
     /**  **/
+
 
 
 }

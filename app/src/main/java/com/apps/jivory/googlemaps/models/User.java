@@ -1,18 +1,23 @@
 package com.apps.jivory.googlemaps.models;
 
+import com.apps.jivory.googlemaps.observers.FirebaseObservable;
+import com.apps.jivory.googlemaps.observers.FirebaseObserver;
 import com.google.firebase.database.IgnoreExtraProperties;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Set;
 
 @IgnoreExtraProperties
-public class User {
+public class User implements FirebaseObservable {
     private String USER_ID;
     private String firstname;
     private String lastname;
     private String emailaddress;
     private Set<User> friends;
     private Date dateofbirth;
+
+    private static ArrayList<FirebaseObserver> observers = new ArrayList<>();
 
     public User(){
     }
@@ -86,5 +91,24 @@ public class User {
                 ", friends=" + friends +
                 ", dateofbirth=" + dateofbirth +
                 '}';
+    }
+
+    @Override
+    public void registerObserver(FirebaseObserver observer) {
+        if(!observers.contains(observer)){
+            observers.add(observer);
+        }
+    }
+
+    @Override
+    public void removeObserver(FirebaseObserver observer) {
+        observers.remove(observer);
+    }
+
+    @Override
+    public void notifyObservers() {
+        for(FirebaseObserver o: observers){
+            o.onChanged();
+        }
     }
 }
