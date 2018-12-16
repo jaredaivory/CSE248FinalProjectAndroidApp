@@ -37,6 +37,10 @@ public class MainViewModel extends AndroidViewModel {
         firebaseAllUsersData = new FirebaseLiveDataHelper(repo.getAllUsersReference());
     }
 
+    public void test(){
+
+    }
+
     public void writeNewUser(User user){
         repo.writeNewUser(user);
     }

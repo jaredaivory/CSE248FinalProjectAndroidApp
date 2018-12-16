@@ -1,13 +1,9 @@
 package com.apps.jivory.googlemaps.models;
 
-import android.util.Log;
-
 import com.google.firebase.database.IgnoreExtraProperties;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.UUID;
 
 @IgnoreExtraProperties
@@ -19,12 +15,21 @@ public class Post {
     private String creator;
     private List<String> participants;
     private int maxParticipants;
+    private PlaceData placeData = new PlaceData();
 
     public static String createPostID() {
         return UUID.randomUUID().toString();
     }
 
+
+
     public Post(){
+    }
+
+    public Post(PlaceData placeData){
+        this.placeData = placeData;
+        this.title = placeData.getName();
+        this.participants = new ArrayList<>();
     }
 
     public Post(String title, String description, int maxParticipants){
@@ -98,6 +103,14 @@ public class Post {
         return false;
     }
 
+    public PlaceData getPlaceData() {
+        return placeData;
+    }
+
+    public void setPlaceData(PlaceData placeData) {
+        this.placeData = placeData;
+    }
+
     @Override
     public String toString() {
         return "Post{" +
@@ -108,6 +121,7 @@ public class Post {
                 ", creator='" + creator + '\'' +
                 ", participants=" + participants +
                 ", maxParticipants=" + maxParticipants +
+                ", placeData=" + placeData +
                 '}';
     }
 }

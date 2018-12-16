@@ -86,28 +86,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
 
+
+
     @Override
     protected void onStart() {
         super.onStart();
         /**
          * Start Listening for data changes.
          */
-
         createObservers();
     }
 
     private void initializeViews(){
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                EditPostFragment dialogFragment = new EditPostFragment();
-                dialogFragment.show(getSupportFragmentManager(),"CreatePost");
-            }
-        });
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -116,9 +108,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new MapFragment()).commit();
     }
+
+
 
 
     private void createObservers(){
@@ -128,10 +120,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         // Observes the postsdata provided from the database.
         LiveData<DataSnapshot> postsData = mainViewModel.getPostData();
         postsData.observe(this, new PostsObserver(this));
-
+        // Observers
         LiveData<DataSnapshot> allUsersData = mainViewModel.getAllUsersData();
         allUsersData.observe(this, new UsersObserver(this));
     }
+
+
 
     /**Overrided methods for the navigation menu */
     @Override
@@ -177,7 +171,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 break;
             case(R.id.nav_map):
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                        new MapFragment() ).commit();
+                        new MapFragment(posts) ).commit();
                 break;
             case(R.id.nav_posts):
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
@@ -194,7 +188,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
-    /** */
+    /** **/
 
     /** Location permissions **/
     private void getLocationPerms(){

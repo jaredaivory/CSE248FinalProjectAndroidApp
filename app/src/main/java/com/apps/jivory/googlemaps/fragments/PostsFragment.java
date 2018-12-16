@@ -75,9 +75,7 @@ public class PostsFragment extends Fragment implements FirebaseObserver{
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
         refresh();
-
     }
 
     private void refresh(){
