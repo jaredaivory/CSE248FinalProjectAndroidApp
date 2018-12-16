@@ -12,6 +12,7 @@ public class Post {
     private String title;
     private String description;
     private LatitudeLongitude latitudeLongitude;
+    private String address;
     private String creator;
     private List<String> participants;
     private int maxParticipants;
@@ -29,6 +30,9 @@ public class Post {
     public Post(PlaceData placeData){
         this.placeData = placeData;
         this.title = placeData.getName();
+        this.title = (placeData.getName().contains("°")) ? placeData.getAddress():placeData.getName();
+        this.latitudeLongitude = placeData.getLatLng();
+        this.address = placeData.getAddress();
         this.participants = new ArrayList<>();
     }
 
@@ -111,6 +115,15 @@ public class Post {
         this.placeData = placeData;
     }
 
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+
     @Override
     public String toString() {
         return "Post{" +
@@ -118,6 +131,7 @@ public class Post {
                 ", title='" + title + '\'' +
                 ", description='" + description + '\'' +
                 ", latitudeLongitude=" + latitudeLongitude +
+                ", address='" + address + '\'' +
                 ", creator='" + creator + '\'' +
                 ", participants=" + participants +
                 ", maxParticipants=" + maxParticipants +

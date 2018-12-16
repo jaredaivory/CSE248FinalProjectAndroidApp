@@ -20,13 +20,10 @@ import com.apps.jivory.googlemaps.observers.UsersObserver;
 import com.apps.jivory.googlemaps.viewmodels.MainViewModel;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.places.Places;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
 
 import android.util.Log;
-import android.view.View;
-
 import com.google.android.material.navigation.NavigationView;
 
 import androidx.annotation.NonNull;
@@ -47,21 +44,16 @@ import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.util.List;
-
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener,
-        GoogleApiClient.OnConnectionFailedListener, EditPostFragment.EditPostFragmentListener, UsersObserver.UsersListener, UserFragment.UserFragmentListener, CurrentUserObserver.UserListener, PostsObserver.PostsListener {
+        GoogleApiClient.OnConnectionFailedListener, EditPostFragment.EditPostFragmentListener, MapFragment.MapListener, UsersObserver.UsersListener, UserFragment.UserFragmentListener, CurrentUserObserver.UserListener, PostsObserver.PostsListener {
     private static final String TAG = "MainActivity";
     private static final String FINE_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
     private static final String COARSE_LOCATION = Manifest.permission.ACCESS_COARSE_LOCATION;
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 2001;
 
     public static Boolean mLocationPermissionsGranted = false;
-    private FusedLocationProviderClient mFusedLocationClient;
     public static MainViewModel mainViewModel;
-    private List<Post> postList;
 
-    private MapFragment mapFragment;
 
     public static GoogleApiClient googleApiClient;
 
@@ -171,7 +163,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 break;
             case(R.id.nav_map):
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                        new MapFragment(posts) ).commit();
+                        new MapFragment(posts,users,currentUser.getUser()) ).commit();
                 break;
             case(R.id.nav_posts):
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
@@ -265,6 +257,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public void onUsersChanged(UsersHashMap users) {
         this.users = users;
+    }
+
+    @Override
+    public void onMapPostUpdated(Post p) {
+        mainViewModel.updatePost(p);
     }
     /**  **/
 

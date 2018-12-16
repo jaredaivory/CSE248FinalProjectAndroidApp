@@ -103,6 +103,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostHolder> {
             this.textViewCreator = itemView.findViewById(R.id.textView_Post_Creator);
             this.textViewLocation = itemView.findViewById(R.id.textView_Post_Location);
             this.textViewID = itemView.findViewById(R.id.textView_Post_ID);
+            this.textViewLocation = itemView.findViewById(R.id.editText_Location);
         }
 
         public void setOnClickListener(View.OnClickListener o){

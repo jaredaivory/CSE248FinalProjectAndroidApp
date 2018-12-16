@@ -2,14 +2,19 @@ package com.apps.jivory.googlemaps.fragments;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,6 +25,8 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.apps.jivory.googlemaps.R;
@@ -29,6 +36,8 @@ import com.apps.jivory.googlemaps.models.LatitudeLongitude;
 import com.apps.jivory.googlemaps.models.PlacesAutoCompleteAdapter;
 import com.apps.jivory.googlemaps.models.Post;
 import com.apps.jivory.googlemaps.models.PostHashMap;
+import com.apps.jivory.googlemaps.models.User;
+import com.apps.jivory.googlemaps.models.UsersHashMap;
 import com.apps.jivory.googlemaps.observers.FirebaseObserver;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
@@ -46,6 +55,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
@@ -65,6 +75,7 @@ import java.util.Map;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
+import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 
 import static android.app.Activity.RESULT_OK;
@@ -76,6 +87,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleA
             new com.google.android.gms.maps.model.LatLng(39.116312, -81.139465),
             new com.google.android.gms.maps.model.LatLng(45.308249, -71.417172));
     private final int PLACE_PICKER_REQUEST = 1;
+    private MapListener listener;
 
     private PlacesAutoCompleteAdapter placesAutoCompleteAdapter;
     private AutoCompleteTextView editTextSearch;
@@ -86,15 +98,27 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleA
     private View view;
     private Marker currentMarker;
 
+    private UsersHashMap users;
     private PostHashMap postHashMap;
-    private ArrayList<Post> posts;
+    private User currentUser;
+
+    private HashMap<String,Post> posts;
+    private HashMap<String, Marker> markers;
+
+
+    public interface MapListener{
+        void onMapPostUpdated(Post p);
+    }
 
     public MapFragment(){
 
     }
 
-    public MapFragment(PostHashMap posts){
+    public MapFragment(PostHashMap posts, UsersHashMap users, User user){
         this.postHashMap = posts;
+        this.posts = posts;
+        this.users = users;
+        this.currentUser = user;
     }
 
     /** View **/
@@ -144,7 +168,12 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleA
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+        if(context instanceof MapListener){
+            listener = (MapListener) context;
+        }
         postHashMap.registerObserver(this);
+        currentUser.registerObserver(this);
+        users.registerObserver(this);
     }
 
 
@@ -158,7 +187,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleA
     public void onMapReady(GoogleMap googleMap) {
         Toast.makeText(getActivity(), "Map is ready", Toast.LENGTH_SHORT).show();
         mMap = googleMap;
-        googleMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(getActivity(), R.raw.style_json_retro));
+        googleMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(getActivity(), R.raw.style_json));
+        mMap.setOnMarkerClickListener(markerClickListener);
 
         if (MainActivity.mLocationPermissionsGranted) {
             Location currentLocation = getDeviceLocation();
@@ -169,6 +199,39 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleA
                 return;
             }
             mMap.setMyLocationEnabled(true);
+            mMap.setIndoorEnabled(true);
+            mMap.setBuildingsEnabled(true);
+            mMap.getUiSettings().setMyLocationButtonEnabled(false);
+
+            mMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
+
+                @Override
+                public View getInfoWindow(Marker arg0) {
+                    return null;
+                }
+
+                @Override
+                public View getInfoContents(Marker marker) {
+
+                    LinearLayout info = new LinearLayout(getContext());
+                    info.setOrientation(LinearLayout.VERTICAL);
+
+                    TextView title = new TextView(getContext());
+                    title.setTextColor(Color.BLACK);
+                    title.setGravity(Gravity.CENTER);
+                    title.setTypeface(null, Typeface.BOLD);
+                    title.setText(marker.getTitle());
+
+                    TextView snippet = new TextView(getContext());
+                    snippet.setTextColor(Color.GRAY);
+                    snippet.setText(marker.getSnippet());
+
+                    info.addView(title);
+                    info.addView(snippet);
+
+                    return info;
+                }
+            });
 
             initializeViews();
         } else {
@@ -176,17 +239,28 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleA
         }
     }
 
+
+
     public void refresh(){
-        this.posts = new ArrayList<>(postHashMap.values());
+        this.markers = new HashMap<>();
         mMap.clear();
-        for(Post p: posts){
+        for(Post p: posts.values()){
             LatitudeLongitude latitudeLongitude = p.getPlaceData().getLatLng();
             LatLng latLng = new LatLng(latitudeLongitude.getLatitude(), latitudeLongitude.getLongitude());
-            mMap.addMarker(new MarkerOptions().position(latLng)
+
+            String snippet = p.getPlaceData().getAddress() +"\n" + p.getDescription() + "\n";
+            for(String s: p.getParticipants()){
+                User u = users.get(s);
+                snippet+=u.getFirstname()+"\n";
+            }
+
+            Marker marker = mMap.addMarker(new MarkerOptions().position(latLng)
                     .title(p.getTitle())
-                    .snippet(p.getDescription())
+                    .snippet(snippet)
                     .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE))
             );
+            marker.setTag(p.getPOST_ID());
+            markers.put((String)marker.getTag(), marker);
         }
     }
 
@@ -219,7 +293,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleA
             final AutocompletePrediction item = placesAutoCompleteAdapter.getItem(position);
             final String placeID = item.getPlaceId();
 
-
             PendingResult<PlaceBuffer> result = Places.GeoDataApi.getPlaceById(MainActivity.googleApiClient, placeID);
             result.setResultCallback(places -> {
                 if (places.getStatus().isSuccess()) {
@@ -245,6 +318,34 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleA
     };
     /***************************/
 
+    private  GoogleMap.OnMarkerClickListener markerClickListener = new GoogleMap.OnMarkerClickListener() {
+        @Override
+        public boolean onMarkerClick(Marker marker) {
+            Toast.makeText(getContext(), "Post ID: " + (String)marker.getTag(), Toast.LENGTH_SHORT).show();
+            final Post p = posts.get(marker.getTag());
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+            builder.setTitle("Join Event");
+            builder.setMessage("Would you like to join event?");
+
+            builder.setPositiveButton("JOIN", ((dialog, which) -> {
+                dialog.dismiss();
+                if(p.addParticipant(currentUser.getUSER_ID())){
+                    listener.onMapPostUpdated(p);
+                } else {
+                    Toast.makeText(getContext(), "Sorry, Max Participants Reached.", Toast.LENGTH_SHORT).show();
+                }
+            }));
+
+            if(p.getCreator().equals(currentUser.getUSER_ID())){
+                Toast.makeText(getContext(), "Your post", Toast.LENGTH_SHORT).show();
+            }else{
+                AlertDialog alert = builder.create();
+                alert.show();
+            }
+            return false;
+        }
+    };
 
 
 
@@ -383,8 +484,11 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleA
     /** Firebase posts observer **/
     @Override
     public void onChanged() {
-        this.posts = new ArrayList<>(postHashMap.values());
+//        this.posts = new ArrayList<>(postHashMap.values());
+        this.posts = (HashMap<String, Post>) postHashMap;
         Log.d(TAG, "onChanged: ");
         refresh();
     }
+
+
 }

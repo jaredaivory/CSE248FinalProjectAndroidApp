@@ -24,7 +24,7 @@ public class EditPostFragment extends DialogFragment {
     public static final String TAG = "EditPostFragment";
     private EditPostFragmentListener listener;
 
-    private EditText editTextPostTitle, editTextPostDescription;
+    private EditText editTextPostTitle, editTextPostDescription, editTextLocation;
     private Button btnPostSave;
     private Spinner amtUser;
 
@@ -95,10 +95,12 @@ public class EditPostFragment extends DialogFragment {
 
         editTextPostTitle = view.findViewById(R.id.editText_PostFragment_Title);
         editTextPostDescription = view.findViewById(R.id.editText_PostFragment_Description);
+        editTextLocation = view.findViewById(R.id.editText_Location);
 
         if(post!=null){
             editTextPostTitle.setText(post.getTitle());
             editTextPostDescription.setText(post.getDescription());
+            editTextLocation.setText(post.getAddress());
         }
 
     }
@@ -118,6 +120,7 @@ public class EditPostFragment extends DialogFragment {
     private Post createPost() {
         String title = editTextPostTitle.getText().toString();
         String description = editTextPostDescription.getText().toString();
+        String location = editTextLocation.getText().toString();
         int maxParticipants = (Integer) amtUser.getSelectedItem();
 
         return new Post(title,description, maxParticipants);

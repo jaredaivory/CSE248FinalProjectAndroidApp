@@ -77,4 +77,8 @@ public class MainViewModel extends AndroidViewModel {
     public void logout(){
         mAuth.signOut();
     }
+
+    public void updatePost(Post post){
+        repo.updatePost(post);
+    }
 }
