@@ -22,3 +22,14 @@
 - Direct/Group Messaging
 
 ![image](https://i.imgur.com/hKuq6Ny.png)
+
+# DEFAULTS:
+- Username: test@email.com
+- Password: password
+
+		Event posting app:
+        The app is an event posting application in which users can use the google maps api
+        and google places api and post event on the map. By going onto the map and searching a 
+        location or maybe even just at your own location you can make a post. The goal of this 
+        project was to make every aspect of of data realtime and observed to a user at all time.
+       
