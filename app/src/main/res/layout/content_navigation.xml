@@ -8,10 +8,19 @@
     tools:context=".activities.MainActivity"
     tools:showIn="@layout/app_bar_navigation">
 
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@mipmap/drop_foreground"
+        />
+
     <FrameLayout
+        android:elevation="10dp"
         android:id="@+id/fragment_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
     </FrameLayout>
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

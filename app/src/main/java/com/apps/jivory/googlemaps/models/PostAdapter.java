@@ -48,6 +48,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostHolder> {
                 dialogFragment.show(((FragmentActivity) holder.itemView.getContext()).getSupportFragmentManager(), "Edit Post");
             });
         }
+        holder.textViewLocation.setText(p.getAddress());
         holder.textViewTitle.setText(p.getTitle());
         holder.textViewCreator.setText(creator);
         holder.textViewDescription.setText(p.getDescription());
@@ -103,7 +104,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostHolder> {
             this.textViewCreator = itemView.findViewById(R.id.textView_Post_Creator);
             this.textViewLocation = itemView.findViewById(R.id.textView_Post_Location);
             this.textViewID = itemView.findViewById(R.id.textView_Post_ID);
-            this.textViewLocation = itemView.findViewById(R.id.editText_Location);
+            this.textViewLocation = itemView.findViewById(R.id.textView_Post_Location);
         }
 
         public void setOnClickListener(View.OnClickListener o){

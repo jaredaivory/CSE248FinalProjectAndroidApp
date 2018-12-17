@@ -1,5 +1,7 @@
 package com.apps.jivory.googlemaps.models;
 
+import android.util.Log;
+
 import com.google.firebase.database.IgnoreExtraProperties;
 
 import java.util.ArrayList;
@@ -107,6 +109,10 @@ public class Post {
         return false;
     }
 
+    public boolean removeParticipant(String user){
+        return participants.remove(user);
+    }
+
     public PlaceData getPlaceData() {
         return placeData;
     }
@@ -116,11 +122,11 @@ public class Post {
     }
 
     public String getAddress() {
-        return address;
+        return placeData.getAddress();
     }
 
     public void setAddress(String address) {
-        this.address = address;
+        placeData.setAddress(address);
     }
 
 

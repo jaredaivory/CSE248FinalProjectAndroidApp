@@ -31,6 +31,7 @@ import android.widget.Toast;
 
 import com.apps.jivory.googlemaps.R;
 import com.apps.jivory.googlemaps.activities.MainActivity;
+import com.apps.jivory.googlemaps.models.EventInfoAdapter;
 import com.apps.jivory.googlemaps.models.PlaceData;
 import com.apps.jivory.googlemaps.models.LatitudeLongitude;
 import com.apps.jivory.googlemaps.models.PlacesAutoCompleteAdapter;
@@ -188,7 +189,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleA
         Toast.makeText(getActivity(), "Map is ready", Toast.LENGTH_SHORT).show();
         mMap = googleMap;
         googleMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(getActivity(), R.raw.style_json));
-        mMap.setOnMarkerClickListener(markerClickListener);
+        //mMap.setOnMarkerClickListener(markerClickListener);
+        mMap.setOnInfoWindowClickListener(infoWindowClickListener);
 
         if (MainActivity.mLocationPermissionsGranted) {
             Location currentLocation = getDeviceLocation();
@@ -203,35 +205,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleA
             mMap.setBuildingsEnabled(true);
             mMap.getUiSettings().setMyLocationButtonEnabled(false);
 
-            mMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
-
-                @Override
-                public View getInfoWindow(Marker arg0) {
-                    return null;
-                }
-
-                @Override
-                public View getInfoContents(Marker marker) {
-
-                    LinearLayout info = new LinearLayout(getContext());
-                    info.setOrientation(LinearLayout.VERTICAL);
-
-                    TextView title = new TextView(getContext());
-                    title.setTextColor(Color.BLACK);
-                    title.setGravity(Gravity.CENTER);
-                    title.setTypeface(null, Typeface.BOLD);
-                    title.setText(marker.getTitle());
-
-                    TextView snippet = new TextView(getContext());
-                    snippet.setTextColor(Color.GRAY);
-                    snippet.setText(marker.getSnippet());
-
-                    info.addView(title);
-                    info.addView(snippet);
-
-                    return info;
-                }
-            });
+            mMap.setInfoWindowAdapter(new EventInfoAdapter(getContext()));
 
             initializeViews();
         } else {
@@ -248,10 +222,10 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleA
             LatitudeLongitude latitudeLongitude = p.getPlaceData().getLatLng();
             LatLng latLng = new LatLng(latitudeLongitude.getLatitude(), latitudeLongitude.getLongitude());
 
-            String snippet = p.getPlaceData().getAddress() +"\n" + p.getDescription() + "\n";
+            String snippet = p.getPlaceData().getAddress() +"\n" + "Description:" + p.getDescription() + "\n";
             for(String s: p.getParticipants()){
                 User u = users.get(s);
-                snippet+=u.getFirstname()+"\n";
+                snippet+=u.getFullname()+"\n";
             }
 
             Marker marker = mMap.addMarker(new MarkerOptions().position(latLng)
@@ -312,27 +286,36 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleA
         public void onClick(View v) {
             if(currentMarker!= null){
                 showPlaces(currentMarker.getPosition());
+            } else {
+                showPlaces();
             }
-            showPlaces();
         }
     };
     /***************************/
 
-    private  GoogleMap.OnMarkerClickListener markerClickListener = new GoogleMap.OnMarkerClickListener() {
+    private GoogleMap.OnInfoWindowClickListener infoWindowClickListener = new GoogleMap.OnInfoWindowClickListener() {
         @Override
-        public boolean onMarkerClick(Marker marker) {
-            Toast.makeText(getContext(), "Post ID: " + (String)marker.getTag(), Toast.LENGTH_SHORT).show();
+        public void onInfoWindowClick(Marker marker) {
             final Post p = posts.get(marker.getTag());
 
             AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+
             builder.setTitle("Join Event");
             builder.setMessage("Would you like to join event?");
 
-            builder.setPositiveButton("JOIN", ((dialog, which) -> {
+            if(p.getParticipants().contains(currentUser.getUSER_ID())){
+                builder.setTitle("Leave Event");
+                builder.setMessage("Would you like to leave event?");
+            }
+
+
+            builder.setPositiveButton("YES", ((dialog, which) -> {
                 dialog.dismiss();
-                if(p.addParticipant(currentUser.getUSER_ID())){
+                if(p.addParticipant(currentUser.getUSER_ID()) && !p.getParticipants().contains(currentUser)){
                     listener.onMapPostUpdated(p);
-                } else {
+                } else if (p.removeParticipant(currentUser.getUSER_ID())){
+                    listener.onMapPostUpdated(p);
+                }else {
                     Toast.makeText(getContext(), "Sorry, Max Participants Reached.", Toast.LENGTH_SHORT).show();
                 }
             }));
@@ -343,7 +326,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleA
                 AlertDialog alert = builder.create();
                 alert.show();
             }
-            return false;
         }
     };
 
