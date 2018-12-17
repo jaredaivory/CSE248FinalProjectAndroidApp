@@ -34,6 +34,11 @@ public class UsersHashMap extends HashMap<String, User> implements FirebaseObser
     }
 
     @Override
+    public void removeAllOvservers() {
+        observers.clear();
+    }
+
+    @Override
     public void notifyObservers() {
         for(FirebaseObserver o: observers){
             o.onChanged();

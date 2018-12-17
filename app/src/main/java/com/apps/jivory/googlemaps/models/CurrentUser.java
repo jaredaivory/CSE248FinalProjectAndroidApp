@@ -42,6 +42,11 @@ public class CurrentUser implements FirebaseObservable {
     }
 
     @Override
+    public void removeAllOvservers() {
+        observers.clear();
+    }
+
+    @Override
     public void notifyObservers() {
         for(FirebaseObserver o: observers){
             o.onChanged();

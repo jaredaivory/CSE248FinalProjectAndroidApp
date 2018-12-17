@@ -37,12 +37,8 @@ public class MainViewModel extends AndroidViewModel {
         firebaseAllUsersData = new FirebaseLiveDataHelper(repo.getAllUsersReference());
     }
 
-    public void test(){
-
-    }
-
-    public void writeNewUser(User user){
-        repo.writeNewUser(user);
+    public void deleteUser(User user){
+        repo.deleteUser(user);
     }
 
     public void updateUser(User user){
@@ -56,7 +52,6 @@ public class MainViewModel extends AndroidViewModel {
     public void updateNewPost(Post post){
         repo.updatePost(post);
     }
-
 
     public LiveData<DataSnapshot> getUserData(){
         return firebaseUserData;

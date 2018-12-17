@@ -16,6 +16,8 @@ import com.apps.jivory.googlemaps.models.User;
 
 import java.util.HashSet;
 
+import androidx.annotation.NonNull;
+
 public class Repository {
     public static final String TAG = "REPOSITORY";
     static Repository INSTANCE = null;
@@ -46,10 +48,18 @@ public class Repository {
     }
 
 
-
+    public void updateUser(User user){
+        DatabaseReference usersRef = mDatabase.child("users").child(mUser.getUid());
+        usersRef.setValue(user);
+    }
     public void writeNewUser(User user) {
         DatabaseReference usersRef = mDatabase.child("users").child(mUser.getUid());
         usersRef.setValue(user);
+    }
+    public void deleteUser(User user){
+        DatabaseReference usersRef = mDatabase.child("users").child(mUser.getUid());
+        usersRef.setValue(null);
+        mUser.delete();
     }
 
     public void insertNewPost(Post post){
@@ -67,24 +77,19 @@ public class Repository {
         DatabaseReference postsRef = mDatabase.child("posts").child(post.getPOST_ID());
         postsRef.setValue(post);
     }
-
     public void deletePost(String postID){
         DatabaseReference postsRef = mDatabase.child("posts").child(postID);
         Log.d(TAG, "deletePost: " +postsRef.toString());
         postsRef.removeValue();
     }
 
-    public void updateUser(User user){
-        DatabaseReference usersRef = mDatabase.child("users").child(mUser.getUid());
-        usersRef.setValue(user);
-    }
+
 
 
     public DatabaseReference getUserReference(){
         DatabaseReference usersRef = mDatabase.child("users").child(mUser.getUid());
         return usersRef;
     }
-
     public DatabaseReference getPostsReference(){
         DatabaseReference postsRef = mDatabase.child("posts");
         return postsRef;

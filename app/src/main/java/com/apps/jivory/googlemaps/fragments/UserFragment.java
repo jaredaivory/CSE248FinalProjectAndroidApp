@@ -1,6 +1,7 @@
 package com.apps.jivory.googlemaps.fragments;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.Context;
 import android.os.Bundle;
@@ -11,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.apps.jivory.googlemaps.R;
 import com.apps.jivory.googlemaps.models.CurrentUser;
@@ -36,11 +38,13 @@ public class UserFragment extends Fragment implements DatePickerDialog.OnDateSet
     private User currentUser;
 
     private EditText editTextDOB, editTextFirstName, editTextLastName, editTextEmailAddress;
+    private TextView textViewFullName;
     private Date date;
 
 
     public interface UserFragmentListener{
         void onUserSave(User user);
+        void onUserDelete(User user);
     }
 
     public UserFragment(){
@@ -82,7 +86,10 @@ public class UserFragment extends Fragment implements DatePickerDialog.OnDateSet
         editTextFirstName = view.findViewById(R.id.editText_FirstName);
         editTextLastName = view.findViewById(R.id.editText_LastName);
         editTextEmailAddress = view.findViewById(R.id.editText_EmailAddress);
+        textViewFullName = view.findViewById(R.id.editText_FullName);
+
         Button btnSaveUser = view.findViewById(R.id.button_SaveUser);
+        Button btnDeleteUser = view.findViewById(R.id.button_DeleteUser);
 
         Calendar calendar = Calendar.getInstance();
         int year = calendar.get(Calendar.YEAR);
@@ -100,6 +107,11 @@ public class UserFragment extends Fragment implements DatePickerDialog.OnDateSet
             listener.onUserSave(updateUser());
         });
 
+        btnDeleteUser.setOnClickListener(e -> {
+            Log.d(TAG, "Delete User:");
+            deleteUser();
+        });
+
     }
 
     @Override
@@ -112,6 +124,11 @@ public class UserFragment extends Fragment implements DatePickerDialog.OnDateSet
         editTextFirstName.setText(currentUser.getFirstname());
         editTextLastName.setText(currentUser.getLastname());
         editTextEmailAddress.setText(currentUser.getEmailaddress());
+        textViewFullName.setText(currentUser.getFullname());
+        if(currentUser.getDateofbirth() != null) {
+            String date = DateFormat.getDateInstance().format(currentUser.getDateofbirth());
+            editTextDOB.setText(date);
+        }
     }
 
     private User updateUser(){
@@ -135,6 +152,23 @@ public class UserFragment extends Fragment implements DatePickerDialog.OnDateSet
         this.date = calendar.getTime();
         editTextDOB.setText(date);
     }
+
+    private void deleteUser(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setTitle("Delete User");
+        builder.setMessage("Are you sure you want to delete your a ccount?");
+
+        builder.setPositiveButton("YES", ((dialog, which) -> {
+            dialog.dismiss();
+            currentUser.removeAllOvservers();
+            currentUserHolder.removeAllOvservers();
+            listener.onUserDelete(currentUser);
+        }));
+
+        AlertDialog alert = builder.create();
+        alert.show();
+    }
+
 
 
     @Override

@@ -117,6 +117,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         allUsersData.observe(this, new UsersObserver(this));
     }
 
+    private void removeObservers(){
+        LiveData<DataSnapshot> userData = mainViewModel.getUserData();
+        userData.removeObservers(this);
+        LiveData<DataSnapshot> postsData = mainViewModel.getPostData();
+        postsData.removeObservers(this);
+        LiveData<DataSnapshot> allUsersData = mainViewModel.getAllUsersData();
+        allUsersData.removeObservers(this);
+
+        currentUser.removeAllOvservers();
+        posts.removeAllOvservers();
+        users.removeAllOvservers();
+    }
 
 
     /**Overrided methods for the navigation menu */
@@ -130,27 +142,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.navigation, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
 
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
@@ -231,6 +222,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public void onUserSave(User user) {
         Log.d(TAG, "onUserSave: " + user.toString());
         mainViewModel.updateUser(user);
+    }
+
+    @Override
+    public void onUserDelete(User user) {
+        removeObservers();
+
+
+        mainViewModel.deleteUser(user);
+        finish();
+        mainViewModel.logout();
+        Intent intent = new Intent(this, LoginActivity.class);
+        startActivity(intent);
+
     }
 
     /** Listener for user data changes**/

@@ -8,7 +8,7 @@
         <item
             android:id="@+id/nav_posts"
             android:icon="@drawable/ic_edit_location"
-            android:title="My Posts" />
+            android:title="Posts" />
 
         <item
             android:id="@+id/nav_map"

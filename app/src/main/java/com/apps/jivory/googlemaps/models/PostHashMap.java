@@ -34,6 +34,11 @@ public class PostHashMap extends HashMap<String, Post> implements FirebaseObserv
     }
 
     @Override
+    public void removeAllOvservers() {
+        observers.clear();
+    }
+
+    @Override
     public void notifyObservers() {
         for(FirebaseObserver o: observers){
             o.onChanged();

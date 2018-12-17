@@ -135,6 +135,7 @@
             </LinearLayout>
 
             <Button
+                android:id="@+id/button_DeleteUser"
                 style="?android:attr/borderlessButtonStyle"
                 android:elevation="0dp"
                 android:layout_width="wrap_content"

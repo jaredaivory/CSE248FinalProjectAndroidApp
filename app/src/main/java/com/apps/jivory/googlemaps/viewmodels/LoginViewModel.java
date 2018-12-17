@@ -24,6 +24,8 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import java.util.regex.Pattern;
+
 
 public class LoginViewModel extends AndroidViewModel {
     private static final String TAG = "LOGINVIEWMODEL";
@@ -75,22 +77,30 @@ public class LoginViewModel extends AndroidViewModel {
     }
 
     public void registerUser(String email, String confirm_email, String password, String confirm_password, String firstname, String lastname){
-        if(email.equals(confirm_email) && password.equals(confirm_password)){
-            repo.registerEmailAndPassword(email,password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                @Override
-                public void onComplete(@NonNull Task<AuthResult> task) {
-                    if (task.isSuccessful()) {
-                        Log.d(TAG, "createUserWithEmail:success");
-                        repo.setFirebaseUser(mAuth.getCurrentUser());
-                        repo.writeNewUser(new User(firstname, lastname, email));
-                        Toast.makeText(getApplication(), "Success!!", Toast.LENGTH_SHORT).show();
-                    } else {
-                        toastError("Registration Failed.");
+        String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\."+"[a-zA-Z0-9_+&*-]+)*@" +"(?:[a-zA-Z0-9-]+\\.)+[a-z" +"A-Z]{2,7}$";
+        Pattern pattern = Pattern.compile(emailRegex);
+        if(email == null || !pattern.matcher(email).matches()){
+            toastError("Invalid Email");
+        }
+        else {
+            if (email.equals(confirm_email) && password.equals(confirm_password)) {
+                repo.registerEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            Log.d(TAG, "createUserWithEmail:success");
+                            repo.setFirebaseUser(mAuth.getCurrentUser());
+                            repo.writeNewUser(new User(firstname, lastname, email));
+                            getApplication().startActivity(new Intent(getApplication(), MainActivity.class));
+                            Toast.makeText(getApplication(), "Success!!", Toast.LENGTH_SHORT).show();
+                        } else {
+                            toastError("Registration Failed.");
+                        }
                     }
-                }
-            });
-        } else{
-            toastError("Email/Passwords do not match");
+                });
+            } else {
+                toastError("Email/Passwords do not match");
+            }
         }
     }
 
