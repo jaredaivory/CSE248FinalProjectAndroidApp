@@ -1,0 +1,777 @@
+@startuml
+
+title __APP's Class Diagram__\n
+
+  package androidx.databinding {
+    package androidx.databinding.library {
+      package androidx.databinding.library.baseAdapters {
+        class BR {
+        }
+      }
+    }
+  }
+  
+
+  package com.android.databinding.library.baseAdapters {
+    class BR {
+    }
+  }
+  
+
+  package com.apps.jivory.googlemaps {
+    class BR {
+    }
+  }
+  
+
+  package com.apps.jivory.googlemaps {
+    class BuildConfig {
+    }
+  }
+  
+
+  package com.apps.jivory.googlemaps {
+    package com.apps.jivory.googlemaps.models {
+      class CurrentUser {
+      }
+    }
+  }
+  
+
+  package com.apps.jivory.googlemaps {
+    package com.apps.jivory.googlemaps.observers {
+      class CurrentUserObserver {
+      }
+    }
+  }
+  
+
+  package androidx.databinding {
+    class DataBinderMapperImpl {
+    }
+  }
+  
+
+  package android.databinding {
+    class DataBinderMapperImpl {
+    }
+  }
+  
+
+  package com.apps.jivory.googlemaps {
+    class DataBinderMapperImpl {
+    }
+  }
+  
+
+  package android.databinding {
+    interface DataBindingComponent {
+    }
+  }
+  
+
+  package androidx.databinding {
+    interface DataBindingComponent {
+    }
+  }
+  
+
+  package android.databinding {
+    package android.databinding.layouts {
+      class DataBindingInfo {
+      }
+    }
+  }
+  
+
+  package com.apps.jivory.googlemaps {
+    package com.apps.jivory.googlemaps.fragments {
+      class EditPostFragment {
+      }
+    }
+  }
+  
+
+  package com.apps.jivory.googlemaps {
+    package com.apps.jivory.googlemaps.models {
+      class EventInfoAdapter {
+      }
+    }
+  }
+  
+
+  package com.apps.jivory.googlemaps {
+    class ExampleInstrumentedTest {
+    }
+  }
+  
+
+  package com.apps.jivory.googlemaps {
+    package com.apps.jivory.googlemaps.arch {
+      class FirebaseLiveDataHelper {
+      }
+    }
+  }
+  
+
+  package com.apps.jivory.googlemaps {
+    package com.apps.jivory.googlemaps.observers {
+      interface FirebaseObservable {
+      }
+    }
+  }
+  
+
+  package com.apps.jivory.googlemaps {
+    package com.apps.jivory.googlemaps.observers {
+      interface FirebaseObserver {
+      }
+    }
+  }
+  
+
+  package com.apps.jivory.googlemaps {
+    package com.apps.jivory.googlemaps.models {
+      class LatitudeLongitude {
+      }
+    }
+  }
+  
+
+  package com.apps.jivory.googlemaps {
+    package com.apps.jivory.googlemaps.activities {
+      class LoginActivity {
+      }
+    }
+  }
+  
+
+  package com.apps.jivory.googlemaps {
+    package com.apps.jivory.googlemaps.databinding {
+      abstract class LoginLayoutBinding {
+      }
+    }
+  }
+  
+
+  package com.apps.jivory.googlemaps {
+    package com.apps.jivory.googlemaps.databinding {
+      class LoginLayoutBindingImpl {
+      }
+    }
+  }
+  
+
+  package com.apps.jivory.googlemaps {
+    package com.apps.jivory.googlemaps.viewmodels {
+      class LoginViewModel {
+      }
+    }
+  }
+  
+
+  package com.apps.jivory.googlemaps {
+    package com.apps.jivory.googlemaps.activities {
+      class MainActivity {
+      }
+    }
+  }
+  
+
+  package com.apps.jivory.googlemaps {
+    package com.apps.jivory.googlemaps.viewmodels {
+      class MainViewModel {
+      }
+    }
+  }
+  
+
+  package com.apps.jivory.googlemaps {
+    package com.apps.jivory.googlemaps.fragments {
+      class MapFragment {
+      }
+    }
+  }
+  
+
+  package com.apps.jivory.googlemaps {
+    package com.apps.jivory.googlemaps.extra {
+      class MapsActivity {
+      }
+    }
+  }
+  
+
+  package com.apps.jivory.googlemaps {
+    package com.apps.jivory.googlemaps.models {
+      class PlaceData {
+      }
+    }
+  }
+  
+
+  package com.apps.jivory.googlemaps {
+    package com.apps.jivory.googlemaps.models {
+      class PlacesAutoCompleteAdapter {
+      }
+    }
+  }
+  
+
+  package com.apps.jivory.googlemaps {
+    package com.apps.jivory.googlemaps.models {
+      class Post {
+      }
+    }
+  }
+  
+
+  package com.apps.jivory.googlemaps {
+    package com.apps.jivory.googlemaps.models {
+      class PostAdapter {
+      }
+    }
+  }
+  
+
+  package com.apps.jivory.googlemaps {
+    package com.apps.jivory.googlemaps.models {
+      class PostHashMap {
+      }
+    }
+  }
+  
+
+  package com.apps.jivory.googlemaps {
+    package com.apps.jivory.googlemaps.fragments {
+      class PostsFragment {
+      }
+    }
+  }
+  
+
+  package com.apps.jivory.googlemaps {
+    package com.apps.jivory.googlemaps.observers {
+      class PostsObserver {
+      }
+    }
+  }
+  
+
+  package com.apps.jivory.googlemaps {
+    class R {
+    }
+  }
+  
+
+  package androidx.lifecycle {
+    package androidx.lifecycle.livedata {
+      package androidx.lifecycle.livedata.core {
+        class R {
+        }
+      }
+    }
+  }
+  
+
+  package androidx.arch.core {
+    class R {
+    }
+  }
+  
+
+  package com.google.firebase {
+    package com.google.firebase.database {
+      package com.google.firebase.database.collection {
+        class R {
+        }
+      }
+    }
+  }
+  
+
+  package com.google.firebase {
+    class R {
+    }
+  }
+  
+
+  package androidx.fragment {
+    class R {
+    }
+  }
+  
+
+  package androidx.appcompat {
+    class R {
+    }
+  }
+  
+
+  package androidx.transition {
+    class R {
+    }
+  }
+  
+
+  package com.google.android.gms.auth {
+    package com.google.android.gms.auth.api {
+      package com.google.android.gms.auth.api.phone {
+        class R {
+        }
+      }
+    }
+  }
+  
+
+  package com.google.android.gms.location {
+    class R {
+    }
+  }
+  
+
+  package androidx.versionedparcelable {
+    class R {
+    }
+  }
+  
+
+  package androidx.media {
+    class R {
+    }
+  }
+  
+
+  package com.google.android.gms.tasks {
+    class R {
+    }
+  }
+  
+
+  package com.google.firebase {
+    package com.google.firebase.auth {
+      package com.google.firebase.auth.internal {
+        class R {
+        }
+      }
+    }
+  }
+  
+
+  package androidx.slidingpanelayout {
+    class R {
+    }
+  }
+  
+
+  package androidx.asynclayoutinflater {
+    class R {
+    }
+  }
+  
+
+  package com.google.android.gms.places_placereport {
+    class R {
+    }
+  }
+  
+
+  package androidx.lifecycle {
+    class R {
+    }
+  }
+  
+
+  package androidx.lifecycle {
+    package androidx.lifecycle.service {
+      class R {
+      }
+    }
+  }
+  
+
+  package com.google.firebase {
+    package com.google.firebase.auth {
+      class R {
+      }
+    }
+  }
+  
+
+  package com.google.android.gms.common {
+    class R {
+    }
+  }
+  
+
+  package com.google.android.gms.flags {
+    class R {
+    }
+  }
+  
+
+  package androidx.customview {
+    class R {
+    }
+  }
+  
+
+  package androidx.loader {
+    class R {
+    }
+  }
+  
+
+  package androidx.databinding {
+    package androidx.databinding.library {
+      package androidx.databinding.library.baseAdapters {
+        class R {
+        }
+      }
+    }
+  }
+  
+
+  package androidx.documentfile {
+    class R {
+    }
+  }
+  
+
+  package androidx.viewpager {
+    class R {
+    }
+  }
+  
+
+  package androidx.vectordrawable {
+    class R {
+    }
+  }
+  
+
+  package com.google.android.gms.auth {
+    class R {
+    }
+  }
+  
+
+  package com.google.android.gms.maps {
+    class R {
+    }
+  }
+  
+
+  package androidx.cardview {
+    class R {
+    }
+  }
+  
+
+  package androidx.interpolator {
+    class R {
+    }
+  }
+  
+
+  package androidx.localbroadcastmanager {
+    class R {
+    }
+  }
+  
+
+  package androidx.lifecycle {
+    package androidx.lifecycle.extensions {
+      class R {
+      }
+    }
+  }
+  
+
+  package androidx.legacy.v4 {
+    class R {
+    }
+  }
+  
+
+  package com.google.android.gms.base {
+    class R {
+    }
+  }
+  
+
+  package com.google.firebase {
+    package com.google.firebase.database {
+      class R {
+      }
+    }
+  }
+  
+
+  package androidx.coordinatorlayout {
+    class R {
+    }
+  }
+  
+
+  package androidx.recyclerview {
+    class R {
+    }
+  }
+  
+
+  package com.google.android.gms.auth {
+    package com.google.android.gms.auth.api {
+      class R {
+      }
+    }
+  }
+  
+
+  package androidx.databinding {
+    package androidx.databinding.library {
+      class R {
+      }
+    }
+  }
+  
+
+  package androidx.drawerlayout {
+    class R {
+    }
+  }
+  
+
+  package androidx.core {
+    class R {
+    }
+  }
+  
+
+  package androidx.constraintlayout.widget {
+    class R {
+    }
+  }
+  
+
+  package androidx.lifecycle {
+    package androidx.lifecycle.viewmodel {
+      class R {
+      }
+    }
+  }
+  
+
+  package androidx.print {
+    class R {
+    }
+  }
+  
+
+  package me.zhanghai.android.materialprogressbar {
+    class R {
+    }
+  }
+  
+
+  package androidx.lifecycle {
+    package androidx.lifecycle.livedata {
+      class R {
+      }
+    }
+  }
+  
+
+  package androidx.swiperefreshlayout {
+    class R {
+    }
+  }
+  
+
+  package androidx.browser {
+    class R {
+    }
+  }
+  
+
+  package androidx.lifecycle {
+    package androidx.lifecycle.process {
+      class R {
+      }
+    }
+  }
+  
+
+  package androidx.legacy.coreui {
+    class R {
+    }
+  }
+  
+
+  package com.google.android.material {
+    class R {
+    }
+  }
+  
+
+  package androidx.legacy.coreutils {
+    class R {
+    }
+  }
+  
+
+  package androidx.cursoradapter {
+    class R {
+    }
+  }
+  
+
+  package com.google.android.gms.location {
+    package com.google.android.gms.location.places {
+      class R {
+      }
+    }
+  }
+  
+
+  package com.firebase.ui.auth {
+    class R {
+    }
+  }
+  
+
+  package com.apps.jivory.googlemaps {
+    package com.apps.jivory.googlemaps.arch {
+      class Repository {
+      }
+    }
+  }
+  
+
+  package com.apps.jivory.googlemaps {
+    package com.apps.jivory.googlemaps.models {
+      class User {
+      }
+    }
+  }
+  
+
+  package com.apps.jivory.googlemaps {
+    package com.apps.jivory.googlemaps.fragments {
+      class UserFragment {
+      }
+    }
+  }
+  
+
+  package com.apps.jivory.googlemaps {
+    package com.apps.jivory.googlemaps.models {
+      class UsersHashMap {
+      }
+    }
+  }
+  
+
+  package com.apps.jivory.googlemaps {
+    package com.apps.jivory.googlemaps.observers {
+      class UsersObserver {
+      }
+    }
+  }
+  
+
+  package com.apps.jivory.googlemaps {
+    package com.apps.jivory.googlemaps.extra {
+      class oldLoginActivity {
+      }
+    }
+  }
+  
+
+  CurrentUser -up-|> FirebaseObservable
+  CurrentUserObserver -up-|> Observer
+  CurrentUserObserver o-- UserListener : userListener
+  DataBinderMapperImpl -up-|> MergedDataBinderMapper
+  DataBinderMapperImpl -up-|> DataBinderMapper
+  EditPostFragment -up-|> DialogFragment
+  EditPostFragment o-- EditPostFragmentListener : listener
+  EditPostFragment o-- Post : post
+  EventInfoAdapter -up-|> InfoWindowAdapter
+  FirebaseLiveDataHelper -up-|> LiveData
+  LoginActivity -up-|> OnClickListener
+  LoginActivity -up-|> AppCompatActivity
+  LoginActivity o-- LoginViewModel : loginViewModel
+  LoginLayoutBinding -up-|> ViewDataBinding
+  LoginLayoutBindingImpl -up-|> LoginLayoutBinding
+  LoginViewModel -up-|> AndroidViewModel
+  LoginViewModel o-- Repository : repo
+  MainActivity -up-|> OnNavigationItemSelectedListener
+  MainActivity -up-|> OnConnectionFailedListener
+  MainActivity -up-|> EditPostFragmentListener
+  MainActivity -up-|> MapListener
+  MainActivity -up-|> UsersListener
+  MainActivity -up-|> UserFragmentListener
+  MainActivity -up-|> UserListener
+  MainActivity -up-|> PostsListener
+  MainActivity -up-|> AppCompatActivity
+  MainActivity o-- CurrentUser : currentUser
+  MainActivity o-- PostHashMap : posts
+  MainActivity o-- UsersHashMap : users
+  MainViewModel -up-|> AndroidViewModel
+  MainViewModel o-- Repository : repo
+  MainViewModel o-- FirebaseLiveDataHelper : firebaseUserData
+  MainViewModel o-- FirebaseLiveDataHelper : firebasePostsData
+  MainViewModel o-- FirebaseLiveDataHelper : firebaseAllUsersData
+  MapFragment -up-|> OnMapReadyCallback
+  MapFragment -up-|> OnConnectionFailedListener
+  MapFragment -up-|> FirebaseObserver
+  MapFragment -up-|> Fragment
+  MapFragment o-- MapListener : listener
+  MapFragment o-- PlacesAutoCompleteAdapter : placesAutoCompleteAdapter
+  MapFragment o-- UsersHashMap : users
+  MapFragment o-- PostHashMap : postHashMap
+  MapFragment o-- User : currentUser
+  MapsActivity -up-|> OnMapReadyCallback
+  MapsActivity -up-|> FragmentActivity
+  PlaceData o-- LatitudeLongitude : latLng
+  PlacesAutoCompleteAdapter -up-|> Filterable
+  PlacesAutoCompleteAdapter -up-|> ArrayAdapter
+  Post o-- LatitudeLongitude : latitudeLongitude
+  Post o-- PlaceData : placeData
+  PostAdapter -up-|> Adapter
+  PostAdapter o-- User : currentUser
+  PostHashMap -up-|> FirebaseObservable
+  PostHashMap -up-|> HashMap
+  PostsFragment -up-|> FirebaseObserver
+  PostsFragment -up-|> Fragment
+  PostsFragment o-- MainViewModel : mainViewModel
+  PostsFragment o-- PostAdapter : adapter
+  PostsFragment o-- PostHashMap : posts
+  PostsFragment o-- UsersHashMap : users
+  PostsFragment o-- User : currentUser
+  PostsObserver -up-|> Observer
+  PostsObserver o-- PostsListener : postsListener
+  User -up-|> FirebaseObservable
+  UserFragment -up-|> OnDateSetListener
+  UserFragment -up-|> FirebaseObserver
+  UserFragment -up-|> Fragment
+  UserFragment o-- UserFragmentListener : listener
+  UserFragment o-- CurrentUser : currentUserHolder
+  UserFragment o-- User : currentUser
+  UsersHashMap -up-|> FirebaseObservable
+  UsersHashMap -up-|> HashMap
+  UsersObserver -up-|> Observer
+  UsersObserver o-- UsersListener : usersListener
+  oldLoginActivity -up-|> OnClickListener
+  oldLoginActivity -up-|> AppCompatActivity
+  oldLoginActivity o-- LoginViewModel : loginViewModel
+
+
+right footer
+
+
+PlantUML diagram generated by SketchIt! (https://bitbucket.org/pmesmeur/sketch.it)
+For more information about this tool, please contact philippe.mesmeur@gmail.com
+endfooter
+
+@enduml

@@ -1,0 +1,278 @@
+@startuml
+
+title __MODELS's Class Diagram__\n
+
+  package com.apps.jivory.googlemaps {
+    package com.apps.jivory.googlemaps.models {
+      class CurrentUser {
+          {static} - INSTANCE : CurrentUser
+          - observers : ArrayList<FirebaseObserver>
+          {static} - user : User
+          - CurrentUser()
+          + getUser()
+          + setUser()
+          {static} + getInstance()
+          + registerObserver()
+          + removeObserver()
+          + removeAllOvservers()
+          + notifyObservers()
+      }
+    }
+  }
+  
+
+  package com.apps.jivory.googlemaps {
+    package com.apps.jivory.googlemaps.models {
+      class EventInfoAdapter {
+          - context : Context
+          - view : View
+          + EventInfoAdapter()
+          + initView()
+          + getInfoWindow()
+          + getInfoContents()
+      }
+    }
+  }
+  
+
+  package com.apps.jivory.googlemaps {
+    package com.apps.jivory.googlemaps.models {
+      class LatitudeLongitude {
+          - latitude : Double
+          - longitude : Double
+          + LatitudeLongitude()
+          + LatitudeLongitude()
+          + getLatitude()
+          + setLatitude()
+          + getLongitude()
+          + setLongitude()
+          + toString()
+      }
+    }
+  }
+  
+
+  package com.apps.jivory.googlemaps {
+    package com.apps.jivory.googlemaps.models {
+      class PlaceData {
+          - name : String
+          - address : String
+          - phonenumber : String
+          - placeID : String
+          + PlaceData()
+          + PlaceData()
+          + PlaceData()
+          + getName()
+          + setName()
+          + getAddress()
+          + setAddress()
+          + getPhonenumber()
+          + setPhonenumber()
+          + getPlaceID()
+          + setPlaceID()
+          + getLatLng()
+          + setLatLng()
+          + toString()
+      }
+    }
+  }
+  
+
+  package com.apps.jivory.googlemaps {
+    package com.apps.jivory.googlemaps.models {
+      class PlacesAutoCompleteAdapter {
+          {static} - TAG : String
+          {static} - STYLE_BOLD : CharacterStyle
+          - mResultList : ArrayList<AutocompletePrediction>
+          - mGoogleApiClient : GoogleApiClient
+          - mBounds : LatLngBounds
+          - mPlaceFilter : AutocompleteFilter
+          + PlacesAutoCompleteAdapter()
+          + setBounds()
+          + getCount()
+          + getItem()
+          + getView()
+          + getFilter()
+          - getAutocomplete()
+      }
+    }
+  }
+  
+
+  package com.apps.jivory.googlemaps {
+    package com.apps.jivory.googlemaps.models {
+      class Post {
+          - POST_ID : String
+          - title : String
+          - description : String
+          - address : String
+          - creator : String
+          - participants : List<String>
+          - maxParticipants : int
+          {static} + createPostID()
+          + Post()
+          + Post()
+          + Post()
+          + setPOST_ID()
+          + getPOST_ID()
+          + getDescription()
+          + setDescription()
+          + getLatitudeLongitude()
+          + setLatitudeLongitude()
+          + getCreator()
+          + setCreator()
+          + getTitle()
+          + setTitle()
+          + getParticipants()
+          + setParticipants()
+          + getMaxParticipants()
+          + setMaxParticipants()
+          + addParticipant()
+          + removeParticipant()
+          + getPlaceData()
+          + setPlaceData()
+          + getAddress()
+          + setAddress()
+          + toString()
+      }
+    }
+  }
+  
+
+  package com.apps.jivory.googlemaps {
+    package com.apps.jivory.googlemaps.models {
+      class PostAdapter {
+          {static} + TAG : String
+          - posts : List<Post>
+          - users : Map<String, User>
+          + onCreateViewHolder()
+          + onBindViewHolder()
+          + getPostID()
+          + setPosts()
+          + setUser()
+          + setUsers()
+          + getItemCount()
+      }
+    }
+  }
+  
+
+  package com.apps.jivory.googlemaps {
+    package com.apps.jivory.googlemaps.models {
+      class PostHolder {
+          - textViewTitle : TextView
+          - textViewCreator : TextView
+          - textViewLocation : TextView
+          - textViewDescription : TextView
+          - textViewID : TextView
+          - itemView : View
+          - PostHolder()
+          + setOnClickListener()
+          - setCurrentPost()
+      }
+    }
+  }
+  
+
+  package com.apps.jivory.googlemaps {
+    package com.apps.jivory.googlemaps.models {
+      class PostHashMap {
+          {static} + INSTANCE : PostHashMap
+          - observers : ArrayList<FirebaseObserver>
+          - PostHashMap()
+          {static} + getInstance()
+          + registerObserver()
+          + removeObserver()
+          + removeAllOvservers()
+          + notifyObservers()
+      }
+    }
+  }
+  
+
+  package com.apps.jivory.googlemaps {
+    package com.apps.jivory.googlemaps.models {
+      class User {
+          - USER_ID : String
+          - firstname : String
+          - lastname : String
+          - emailaddress : String
+          - friends : Set<User>
+          - dateofbirth : Date
+          {static} - observers : ArrayList<FirebaseObserver>
+          + User()
+          + User()
+          + getEmailaddress()
+          + setEmailaddress()
+          + getFullname()
+          + getFirstname()
+          + setFirstname()
+          + getLastname()
+          + setLastname()
+          + getFriends()
+          + getUSER_ID()
+          + setUSER_ID()
+          + setFriends()
+          + getDateofbirth()
+          + setDateofbirth()
+          + toString()
+          + registerObserver()
+          + removeObserver()
+          + removeAllOvservers()
+          + notifyObservers()
+      }
+    }
+  }
+  
+
+  package com.apps.jivory.googlemaps {
+    package com.apps.jivory.googlemaps.models {
+      class UsersHashMap {
+          {static} + INSTANCE : UsersHashMap
+          - observers : ArrayList<FirebaseObserver>
+          - UsersHashMap()
+          {static} + getInstance()
+          + registerObserver()
+          + removeObserver()
+          + removeAllOvservers()
+          + notifyObservers()
+      }
+    }
+  }
+  
+
+  CurrentUser -up-|> FirebaseObservable
+  EventInfoAdapter -up-|> InfoWindowAdapter
+  PlaceData o-- LatitudeLongitude : latLng
+  PlacesAutoCompleteAdapter -up-|> Filterable
+  PlacesAutoCompleteAdapter -up-|> ArrayAdapter
+  Post o-- LatitudeLongitude : latitudeLongitude
+  Post o-- PlaceData : placeData
+  PostAdapter -up-|> Adapter
+  PostAdapter o-- User : currentUser
+  PostAdapter +-down- PostHolder
+  PostHolder -up-|> ViewHolder
+  PostHolder o-- Post : currentPost
+  PostHashMap -up-|> FirebaseObservable
+  PostHashMap -up-|> HashMap
+  SimpleImmutableEntry -up-|> Entry
+  SimpleImmutableEntry -up-|> Serializable
+  SimpleEntry -up-|> Entry
+  SimpleEntry -up-|> Serializable
+  User -up-|> FirebaseObservable
+  UsersHashMap -up-|> FirebaseObservable
+  UsersHashMap -up-|> HashMap
+  SimpleImmutableEntry -up-|> Entry
+  SimpleImmutableEntry -up-|> Serializable
+  SimpleEntry -up-|> Entry
+  SimpleEntry -up-|> Serializable
+
+
+right footer
+
+
+PlantUML diagram generated by SketchIt! (https://bitbucket.org/pmesmeur/sketch.it)
+For more information about this tool, please contact philippe.mesmeur@gmail.com
+endfooter
+
+@enduml

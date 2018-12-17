@@ -1,0 +1,189 @@
+@startuml
+
+title __FRAGMENTS's Class Diagram__\n
+
+  package com.apps.jivory.googlemaps {
+    package com.apps.jivory.googlemaps.fragments {
+      class EditPostFragment {
+          {static} + TAG : String
+          - editTextPostTitle : EditText
+          - editTextPostDescription : EditText
+          - editTextLocation : EditText
+          - btnPostSave : Button
+          - amtUser : Spinner
+          - view : View
+          - spinnerListener : OnItemSelectedListener
+          + EditPostFragment()
+          + EditPostFragment()
+          + onCreateView()
+          + onAttach()
+          + onViewCreated()
+          - initViews()
+          - savePost()
+          - createPost()
+      }
+    }
+  }
+  
+
+  package com.apps.jivory.googlemaps {
+    package com.apps.jivory.googlemaps.fragments {
+      interface EditPostFragmentListener {
+          {abstract} + onPostSaved()
+      }
+    }
+  }
+  
+
+  package com.apps.jivory.googlemaps {
+    package com.apps.jivory.googlemaps.fragments {
+      class MapFragment {
+          {static} + TAG : String
+          {static} - DEFAULT_ZOOM : float
+          {static} - latLngBounds : LatLngBounds
+          - PLACE_PICKER_REQUEST : int
+          - editTextSearch : AutoCompleteTextView
+          - mMap : GoogleMap
+          - mFusedLocationClient : FusedLocationProviderClient
+          - view : View
+          - currentMarker : Marker
+          - posts : HashMap<String, Post>
+          - markers : HashMap<String, Marker>
+          - locationSearchItemClickListener : OnItemClickListener
+          - createEventListener : OnClickListener
+          - infoWindowClickListener : OnInfoWindowClickListener
+          + MapFragment()
+          + MapFragment()
+          + onCreateView()
+          - initializeViews()
+          + onAttach()
+          + onViewCreated()
+          + onMapReady()
+          + refresh()
+          + onActivityResult()
+          + showPlaces()
+          + showPlaces()
+          - geoLocate()
+          - getDeviceLocation()
+          - moveCamera()
+          - moveCamera()
+          - moveCamera()
+          - resetCamera()
+          + onConnectionFailed()
+          - closeKeyboard()
+          + onChanged()
+      }
+    }
+  }
+  
+
+  package com.apps.jivory.googlemaps {
+    package com.apps.jivory.googlemaps.fragments {
+      interface MapListener {
+          {abstract} + onMapPostUpdated()
+      }
+    }
+  }
+  
+
+  package com.apps.jivory.googlemaps {
+    package com.apps.jivory.googlemaps.fragments {
+      class PostsFragment {
+          {static} + TAG : String
+          - recyclerView : RecyclerView
+          - view : View
+          + PostsFragment()
+          + PostsFragment()
+          + onCreateView()
+          + onAttach()
+          + onViewCreated()
+          - refresh()
+          - initializeViews()
+          - deletePost()
+          + onDestroy()
+          + onChanged()
+      }
+    }
+  }
+  
+
+  package com.apps.jivory.googlemaps {
+    package com.apps.jivory.googlemaps.fragments {
+      class UserFragment {
+          {static} + TAG : String
+          - view : View
+          - editTextDOB : EditText
+          - editTextFirstName : EditText
+          - editTextLastName : EditText
+          - editTextEmailAddress : EditText
+          - textViewFullName : TextView
+          - date : Date
+          + UserFragment()
+          + UserFragment()
+          + onCreateView()
+          + onAttach()
+          + onViewCreated()
+          - init()
+          + onDestroy()
+          - refresh()
+          - updateUser()
+          + onDateSet()
+          - deleteUser()
+          + onChanged()
+      }
+    }
+  }
+  
+
+  package com.apps.jivory.googlemaps {
+    package com.apps.jivory.googlemaps.fragments {
+      interface UserFragmentListener {
+          {abstract} + onUserSave()
+          {abstract} + onUserDelete()
+      }
+    }
+  }
+  
+
+  EditPostFragment -up-|> DialogFragment
+  EditPostFragment o-- EditPostFragmentListener : listener
+  EditPostFragment o-- Post : post
+  EditPostFragment +-down- EditPostFragmentListener
+  SavedState -up-|> Parcelable
+  MapFragment -up-|> OnMapReadyCallback
+  MapFragment -up-|> OnConnectionFailedListener
+  MapFragment -up-|> FirebaseObserver
+  MapFragment -up-|> Fragment
+  MapFragment o-- MapListener : listener
+  MapFragment o-- PlacesAutoCompleteAdapter : placesAutoCompleteAdapter
+  MapFragment o-- UsersHashMap : users
+  MapFragment o-- PostHashMap : postHashMap
+  MapFragment o-- User : currentUser
+  MapFragment +-down- MapListener
+  SavedState -up-|> Parcelable
+  PostsFragment -up-|> FirebaseObserver
+  PostsFragment -up-|> Fragment
+  PostsFragment o-- MainViewModel : mainViewModel
+  PostsFragment o-- PostAdapter : adapter
+  PostsFragment o-- PostHashMap : posts
+  PostsFragment o-- UsersHashMap : users
+  PostsFragment o-- User : currentUser
+  SavedState -up-|> Parcelable
+  UserFragment -up-|> OnDateSetListener
+  UserFragment -up-|> FirebaseObserver
+  UserFragment -up-|> Fragment
+  UserFragment o-- UserFragmentListener : listener
+  UserFragment o-- CurrentUser : currentUserHolder
+  UserFragment o-- User : currentUser
+  UserFragment +-down- UserFragmentListener
+  SavedState -up-|> Parcelable
+
+
+right footer
+
+
+PlantUML diagram generated by SketchIt! (https://bitbucket.org/pmesmeur/sketch.it)
+For more information about this tool, please contact philippe.mesmeur@gmail.com
+endfooter
+
+@enduml
